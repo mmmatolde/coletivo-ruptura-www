@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Facebook, Instagram, Twitter } from "lucide-react"
+import { SiX, SiFacebook, SiInstagram } from "react-icons/si"
 
 export default function Footer() {
   return (
@@ -22,16 +22,16 @@ export default function Footer() {
               Lisboa, Portugal
             </p>
             <div className="mt-4 flex space-x-4">
-              <Link href="#" className="text-gray-500 hover:text-red-600">
-                <Facebook className="h-5 w-5" />
+              <Link href="https://www.facebook.com/rupturacoletivo/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                <SiFacebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
-              <Link href="#" className="text-gray-500 hover:text-red-600">
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
+              <Link href="https://x.com/coletivoruptura" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                <SiX className="h-5 w-5" />
+                <span className="sr-only">X (antigo Twitter)</span>
               </Link>
-              <Link href="#" className="text-gray-500 hover:text-red-600">
-                <Instagram className="h-5 w-5" />
+              <Link href="https://www.instagram.com/coletivo_ruptura/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                <SiInstagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
             </div>

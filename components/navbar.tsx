@@ -11,7 +11,7 @@ const routes = [
   { href: "/", label: "Início" },
   { href: "/about", label: "Sobre Nós" },
   { href: "/agenda", label: "Agenda" },
-  { href: "/articles", label: "Artigos" },
+  { href: "/artigos", label: "Artigos" },
   { href: "/tribune", label: "Tribuna Pública" },
   { href: "/materials", label: "Material e Ações" },
   { href: "/texts", label: "Textos e Traduções" },
