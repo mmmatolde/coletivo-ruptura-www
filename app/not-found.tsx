@@ -3,10 +3,17 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
-// Componente que usa useSearchParams deve ser separado e cliente
-const SearchParamsContent = () => {
-  // const { useSearchParams } = require('next/navigation')
+// Fallback component for loading states
+const LoadingFallback = () => (
+  <p className="text-gray-600 dark:text-gray-300 mb-8">
+    Carregando...
+  </p>
+)
+
+// Renamed: Original component that uses useSearchParams
+const RawSearchParamsContent = () => {
   const searchParams = useSearchParams()
   const from = searchParams.get('from')
 
@@ -19,6 +26,12 @@ const SearchParamsContent = () => {
   )
 }
 
+// Dynamically import the component that uses useSearchParams, disabling SSR
+const SearchParamsContent = dynamic(() => Promise.resolve(RawSearchParamsContent), {
+  ssr: false,
+  loading: () => <LoadingFallback />,
+})
+
 // Componente principal que não depende de useSearchParams
 const NotFoundContent = () => {
   return (
@@ -26,11 +39,7 @@ const NotFoundContent = () => {
       <div className="text-center">
         <h1 className="text-6xl font-bold text-red-600 mb-4">404</h1>
         <h2 className="text-2xl font-semibold mb-4">A Página não foi encontrada</h2>
-        <Suspense fallback={
-          <p className="text-gray-600 dark:text-gray-300 mb-8">
-            Carregando...
-          </p>
-        }>
+        <Suspense fallback={<LoadingFallback />}>
           <SearchParamsContent />
         </Suspense>
         <Link
