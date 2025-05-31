@@ -2,10 +2,11 @@
 
 import { Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 // Componente que usa useSearchParams deve ser separado e cliente
 const SearchParamsContent = () => {
-  const { useSearchParams } = require('next/navigation')
+  // const { useSearchParams } = require('next/navigation')
   const searchParams = useSearchParams()
   const from = searchParams.get('from')
 
