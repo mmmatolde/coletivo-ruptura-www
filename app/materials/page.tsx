@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function MaterialsPage() {
-  // Sample materials datas
+  // Sample materials datas asdsfdasfsd
   const materials = {
     documents: [
       {
