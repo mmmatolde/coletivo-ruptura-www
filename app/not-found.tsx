@@ -25,7 +25,7 @@ const NotFoundContent = () => {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="text-center">
         <h1 className="text-6xl font-bold text-red-600 mb-4">404</h1>
-        <h2 className="text-2xl font-semibold mb-4">Página não encontrada</h2>
+        <h2 className="text-2xl font-semibold mb-4">A Página não foi encontrada</h2>
         <Suspense fallback={
           <p className="text-gray-600 dark:text-gray-300 mb-8">
             Carregando...
