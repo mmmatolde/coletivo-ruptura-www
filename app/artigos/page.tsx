@@ -9,7 +9,8 @@ export default async function ArtigosPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const page = Number(searchParams.page) || 1
+  const pageParam = await Promise.resolve(searchParams.page)
+  const page = Number(pageParam) || 1
   const limit = 6
   const skip = (page - 1) * limit
 

@@ -34,7 +34,8 @@ const options = {
 }
 
 export default async function ArtigoPage({ params }: { params: { id: string } }) {
-  const article = await getArticleById(params.id)
+  const resolvedParams = await params
+  const article = await getArticleById(resolvedParams.id)
 
   if (!article) {
     notFound()
