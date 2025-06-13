@@ -69,46 +69,44 @@ export default async function TribunaPage({
         <div className="container">
           <div className="grid gap-8 md:grid-cols-2">
             {tribunes.map((tribune) => (
-              <Card key={tribune.sys.id} className="group overflow-hidden transition-all hover:shadow-md">
-                <div className="flex flex-col md:flex-row">
-                  <div className="relative h-48 w-full md:h-auto md:w-1/3">
-                    <Image
-                      src={`https:${tribune.fields.capa.fields.file.url}`}
-                      alt={tribune.fields.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <CardHeader className="p-0 pb-3">
-                      <CardTitle className="font-heading text-xl">{tribune.fields.title}</CardTitle>
-                      <CardDescription className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" /> 
-                        {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-0 py-3">
-                      <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <User className="h-4 w-4" /> {tribune.fields.autoria}
+              <Link
+                key={tribune.sys.id}
+                href={`/tribuna/${tribune.sys.id}`}
+                className="block transition-colors hover:text-red-600"
+              >
+                <Card className="group overflow-hidden transition-all hover:shadow-md">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="relative h-48 w-full md:h-auto md:w-1/3">
+                      <Image
+                        src={`https:${tribune.fields.capa.fields.file.url}`}
+                        alt={tribune.fields.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <CardHeader className="p-0 pb-3">
+                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{tribune.fields.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" /> 
+                          {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <User className="h-4 w-4" /> {tribune.fields.autoria}
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-0 pt-3">
-                      <Link
-                        href={`/tribuna/${tribune.sys.id}`}
-                        className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                      >
-                        Ler mais <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
-                    </CardFooter>
+                      </CardContent>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </Link>
             ))}
           </div>
 
