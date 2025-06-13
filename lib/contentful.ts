@@ -230,8 +230,8 @@ export async function getTribuneById(id: string): Promise<BlogFields | null> {
   try {
     const tribune = await client.getEntry(id)
     
-    // Verifica se é uma tribuna
-    if (tribune.fields.isArticle) {
+    // Verifica se é uma tribuna (isArticle deve ser false)
+    if (tribune.fields.isArticle === true) {
       return null
     }
 
