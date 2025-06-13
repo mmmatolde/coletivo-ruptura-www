@@ -9,8 +9,8 @@ export default async function ArtigosPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const pageParam = await Promise.resolve(searchParams.page)
-  const page = Number(pageParam) || 1
+  const params = await searchParams
+  const page = Number(params?.page) || 1
   const limit = 6
   const skip = (page - 1) * limit
 
@@ -39,8 +39,8 @@ export default async function ArtigosPage({
               key={article.sys.id}
               className="group"
             >
-              <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105">
-                <div className="relative h-48 w-full">
+              <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[400px] flex flex-col">
+                <div className="relative h-48 w-full flex-shrink-0">
                   <Image
                     src={`https:${article.fields.capa.fields.file.url}`}
                     alt={article.fields.title}
@@ -48,11 +48,11 @@ export default async function ArtigosPage({
                     className="object-cover"
                   />
                 </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2 group-hover:text-red-600">
+                <div className="p-4 flex flex-col flex-grow">
+                  <h2 className="text-xl font-semibold mb-2 group-hover:text-red-600 line-clamp-2">
                     {article.fields.title}
                   </h2>
-                  <div className="flex flex-col gap-1 text-gray-600 dark:text-gray-300">
+                  <div className="flex flex-col gap-1 text-gray-600 dark:text-gray-300 mt-auto">
                     <p>Por {article.fields.autoria}</p>
                     <p>{new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
                       day: 'numeric',

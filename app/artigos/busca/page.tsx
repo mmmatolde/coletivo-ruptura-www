@@ -10,8 +10,9 @@ export default async function BuscaPage({
 }: {
   searchParams: { q?: string; page?: string }
 }) {
-  const query = searchParams.q || ''
-  const page = Number(searchParams.page) || 1
+  const params = await searchParams
+  const query = params?.q || ''
+  const page = Number(params?.page) || 1
   const limit = 6
   const skip = (page - 1) * limit
 

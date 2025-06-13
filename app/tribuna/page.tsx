@@ -13,8 +13,8 @@ export default async function TribunaPage({
 }: {
   searchParams: { page?: string }
 }) {
-  const pageParam = await Promise.resolve(searchParams.page)
-  const page = Number(pageParam) || 1
+  const params = await searchParams
+  const page = Number(params?.page) || 1
   const limit = 6
   const skip = (page - 1) * limit
 
