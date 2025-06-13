@@ -74,9 +74,9 @@ export default async function TribunaPage({
                 href={`/tribuna/${tribune.sys.id}`}
                 className="block transition-colors hover:text-red-600"
               >
-                <Card className="group overflow-hidden transition-all hover:shadow-md">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="relative h-48 w-full md:h-auto md:w-1/3">
+                <Card className="group overflow-hidden transition-all hover:shadow-md md:h-[200px]">
+                  <div className="flex flex-col md:flex-row h-full">
+                    <div className="relative h-48 w-full md:h-full md:w-1/3">
                       <Image
                         src={`https:${tribune.fields.capa.fields.file.url}`}
                         alt={tribune.fields.title}
@@ -84,7 +84,7 @@ export default async function TribunaPage({
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <div className="flex flex-1 flex-col p-6">
+                    <div className="flex flex-1 flex-col p-6 h-full">
                       <CardHeader className="p-0 pb-3">
                         <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{tribune.fields.title}</CardTitle>
                         <CardDescription className="flex items-center gap-2">
