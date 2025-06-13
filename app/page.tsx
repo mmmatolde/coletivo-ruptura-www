@@ -1,12 +1,14 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Calendar, FileText, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { getArticles } from "@/lib/contentful"
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Buscar os 3 artigos mais recentes
+  const { articles } = await getArticles(3, 0)
+
   return (
     <div className="flex flex-col">
       {/* Hero Section - Com a imagem da manifestação e texto sobreposto */}
@@ -41,22 +43,22 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/join" onClick={() => window.scrollTo(0, 0)}>
+              <Link href="/join">
                 Junta-te ao Coletivo
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/about" onClick={() => window.scrollTo(0, 0)}>
+              <Link href="/about">
                 Conhece o Coletivo
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/materials" onClick={() => window.scrollTo(0, 0)}>
+              <Link href="/materials">
                 Material e Ações
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/agenda" onClick={() => window.scrollTo(0, 0)}>
+              <Link href="/agenda">
                 Agenda de Eventos
               </Link>
             </Button>
@@ -80,7 +82,7 @@ export default function HomePage() {
               </p>
               <div className="mt-8">
                 <Button asChild className="bg-red-600 text-white hover:bg-red-700">
-                  <Link href="/join" onClick={() => window.scrollTo(0, 0)}>
+                  <Link href="/join">
                     Quero juntar-me
                   </Link>
                 </Button>
@@ -109,95 +111,41 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {/* Article Card */}
-            <Card className="group overflow-hidden transition-all hover:shadow-md">
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Manifestação"
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="font-heading text-xl">Análise da Conjuntura Política</CardTitle>
-                <CardDescription>12 Maio 2025</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Uma análise profunda sobre a situação política atual e as suas implicações para os movimentos sociais.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Link
-                  href="/articles/1"
-                  onClick={() => window.scrollTo(0, 0)}
-                  className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                >
-                  Ler mais <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </CardFooter>
-            </Card>
-
-            {/* Event Card */}
-            <Card className="group overflow-hidden transition-all hover:shadow-md">
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Assembleia"
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="font-heading text-xl">Assembleia Geral</CardTitle>
-                <CardDescription>20 Maio 2025</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Próxima assembleia geral para discutir as linhas de ação e estratégias do coletivo.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Link
-                  href="/agenda"
-                  onClick={() => window.scrollTo(0, 0)}
-                  className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                >
-                  Ver detalhes <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </CardFooter>
-            </Card>
-
-            {/* Materials Card */}
-            <Card className="group overflow-hidden transition-all hover:shadow-md">
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Materiais"
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="font-heading text-xl">Novo Material Formativo</CardTitle>
-                <CardDescription>5 Maio 2025</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Publicamos um novo material formativo sobre organização comunitária e ação direta.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Link
-                  href="/materials"
-                  onClick={() => window.scrollTo(0, 0)}
-                  className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                >
-                  Descarregar <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </CardFooter>
-            </Card>
+            {articles.map((article) => (
+              <Card key={article.sys.id} className="group overflow-hidden transition-all hover:shadow-md">
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={`https:${article.fields.capa.fields.file.url}`}
+                    alt={article.fields.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="font-heading text-xl">{article.fields.title}</CardTitle>
+                  <CardDescription>
+                    {new Date(article.sys.createdAt).toLocaleDateString('pt-PT', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Por {article.fields.autoria}
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href={`/artigos/${article.sys.id}`}
+                    className="flex items-center text-sm font-medium text-red-600 hover:underline"
+                  >
+                    Ler mais <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -213,7 +161,7 @@ export default function HomePage() {
             <p className="mt-4 text-lg">Contribui agora e juntos podemos mudar Portugal</p>
             <div className="mt-8">
               <Button asChild size="lg" className="bg-red-600 text-white hover:bg-red-700">
-                <Link href="/donate" onClick={() => window.scrollTo(0, 0)}>
+                <Link href="/donate">
                   Quero contribuir
                 </Link>
               </Button>
@@ -234,7 +182,6 @@ export default function HomePage() {
               <p className="mt-2 text-gray-600">Acede à nossa biblioteca de textos políticos e traduções</p>
               <Link
                 href="/texts"
-                onClick={() => window.scrollTo(0, 0)}
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Explorar textos
@@ -248,7 +195,6 @@ export default function HomePage() {
               <p className="mt-2 text-gray-600">Participa em debates e discussões sobre temas da atualidade</p>
               <Link
                 href="/tribune"
-                onClick={() => window.scrollTo(0, 0)}
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Ir para a tribuna
@@ -262,7 +208,6 @@ export default function HomePage() {
               <p className="mt-2 text-gray-600">Consulta o nosso calendário de eventos e atividades</p>
               <Link
                 href="/agenda"
-                onClick={() => window.scrollTo(0, 0)}
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Ver agenda

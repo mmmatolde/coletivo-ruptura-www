@@ -14,7 +14,7 @@ const options = {
   },
   renderNode: {
     [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
-      <p className="mb-4">{children}</p>
+      <p className="mb-4 text-justify">{children}</p>
     ),
     [BLOCKS.HEADING_1]: (node: any, children: React.ReactNode) => (
       <h1 className="text-4xl font-bold mb-6">{children}</h1>
