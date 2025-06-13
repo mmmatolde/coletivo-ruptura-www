@@ -4,9 +4,12 @@ import { ArrowDown, BookOpen, FileText, Printer, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState } from "react"
 
 export default function MaterialsPage() {
-  // Sample materials datas asdsfdasfsd
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
+
   const materials = {
     documents: [
       {
@@ -15,7 +18,7 @@ export default function MaterialsPage() {
         description: "Guia prático para a organização de assembleias e grupos de trabalho comunitários.",
         type: "PDF",
         size: "2.4 MB",
-        date: "10 Maio 2025",
+        date: "10 Maio 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -24,7 +27,7 @@ export default function MaterialsPage() {
         description: "Material formativo sobre as bases do pensamento crítico e a sua aplicação prática.",
         type: "PDF",
         size: "1.8 MB",
-        date: "2 Maio 2025",
+        date: "2 Maio 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -33,7 +36,7 @@ export default function MaterialsPage() {
         description: "Ferramentas e conselhos para a comunicação eficaz em contextos de mobilização social.",
         type: "PDF",
         size: "3.1 MB",
-        date: "25 Abril 2025",
+        date: "25 Abril 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
     ],
@@ -44,7 +47,7 @@ export default function MaterialsPage() {
         description: "Conjunto de designs de cartazes prontos para imprimir em formato A3.",
         type: "ZIP",
         size: "15 MB",
-        date: "8 Maio 2025",
+        date: "8 Maio 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -53,7 +56,7 @@ export default function MaterialsPage() {
         description: "Série de infografias explicativas sobre as causas e consequências da crise climática.",
         type: "ZIP",
         size: "8.5 MB",
-        date: "1 Maio 2025",
+        date: "1 Maio 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -62,7 +65,7 @@ export default function MaterialsPage() {
         description: "Conjunto de modelos editáveis para publicações em redes sociais.",
         type: "ZIP",
         size: "12 MB",
-        date: "20 Abril 2025",
+        date: "20 Abril 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
     ],
@@ -73,7 +76,7 @@ export default function MaterialsPage() {
         description: "Série de entrevistas em áudio com ativistas de diferentes movimentos sociais.",
         type: "MP3",
         size: "45 MB",
-        date: "5 Maio 2025",
+        date: "5 Maio 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -82,7 +85,7 @@ export default function MaterialsPage() {
         description: "Documentário sobre as lutas pelo direito à cidade e contra a gentrificação.",
         type: "MP4",
         size: "250 MB",
-        date: "15 Abril 2025",
+        date: "15 Abril 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
       {
@@ -91,11 +94,22 @@ export default function MaterialsPage() {
         description: "Série de podcasts com debates sobre temas da atualidade política e social.",
         type: "MP3",
         size: "60 MB",
-        date: "10 Abril 2025",
+        date: "10 Abril 2024",
         image: "/placeholder.svg?height=300&width=400",
       },
     ],
   }
+
+  const allMaterials = [
+    ...materials.documents,
+    ...materials.graphics,
+    ...materials.audiovisual,
+  ]
+
+  const totalPages = Math.ceil(allMaterials.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentMaterials = allMaterials.slice(startIndex, endIndex)
 
   return (
     <div className="flex flex-col">
@@ -131,10 +145,19 @@ export default function MaterialsPage() {
             {/* Documents Tab */}
             <TabsContent value="documents">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {materials.documents.map((item) => (
+                {currentMaterials.map((item) => (
                   <Card key={item.id} className="overflow-hidden">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+                      <Image 
+                        src={item.image || "/placeholder.svg"} 
+                        alt={item.title} 
+                        fill 
+                        className="object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/placeholder.svg";
+                        }}
+                      />
                       <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
                         {item.type}
                       </div>
@@ -163,15 +186,59 @@ export default function MaterialsPage() {
                   </Card>
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Anterior
+                    </Button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <Button
+                        key={pageNum}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
+                      >
+                        {pageNum}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Seguinte
+                    </Button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             {/* Graphics Tab */}
             <TabsContent value="graphics">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {materials.graphics.map((item) => (
+                {currentMaterials.map((item) => (
                   <Card key={item.id} className="overflow-hidden">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+                      <Image 
+                        src={item.image || "/placeholder.svg"} 
+                        alt={item.title} 
+                        fill 
+                        className="object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/placeholder.svg";
+                        }}
+                      />
                       <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
                         {item.type}
                       </div>
@@ -200,15 +267,59 @@ export default function MaterialsPage() {
                   </Card>
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Anterior
+                    </Button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <Button
+                        key={pageNum}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
+                      >
+                        {pageNum}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Seguinte
+                    </Button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             {/* Audiovisual Tab */}
             <TabsContent value="audiovisual">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {materials.audiovisual.map((item) => (
+                {currentMaterials.map((item) => (
                   <Card key={item.id} className="overflow-hidden">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+                      <Image 
+                        src={item.image || "/placeholder.svg"} 
+                        alt={item.title} 
+                        fill 
+                        className="object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/placeholder.svg";
+                        }}
+                      />
                       <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
                         {item.type}
                       </div>
@@ -237,6 +348,41 @@ export default function MaterialsPage() {
                   </Card>
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Anterior
+                    </Button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <Button
+                        key={pageNum}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
+                      >
+                        {pageNum}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Seguinte
+                    </Button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
