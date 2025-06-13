@@ -13,6 +13,8 @@ const nextConfig = {
     verbose: true,
   },
   output: 'standalone',
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  poweredByHeader: false,
 }
 
 export default nextConfig
