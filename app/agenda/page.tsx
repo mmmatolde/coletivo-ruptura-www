@@ -11,11 +11,9 @@ export default function AgendaPage() {
       {
         id: 1,
         title: "Assembleia Geral",
-        date: "20 Maio 2025",
-        time: "18:00 - 20:00",
-        location: "Centro Social A Ingovernável, Lisboa",
+        date: "2024-01-20T18:00:00",
         description:
-          "Assembleia geral para discutir as linhas de ação e estratégias do colectivo para os próximos meses.",
+          "Assembleia geral para discutir as linhas de ação e estratégias do coletivo.",
         type: "Assembleia",
       },
       {

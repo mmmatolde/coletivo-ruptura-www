@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import Link from "next/link"
+import { SiFacebook, SiX, SiInstagram } from "react-icons/si"
 
 export default function ContactPage() {
   const [formState, setFormState] = useState({
@@ -92,18 +94,6 @@ export default function ContactPage() {
                 <Card>
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-                      <MapPin className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Morada</h3>
-                      <p className="text-sm text-gray-600">Centro Social A Ingovernável, Lisboa, Portugal</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
                       <Phone className="h-6 w-6" />
                     </div>
                     <div>
@@ -136,6 +126,39 @@ export default function ContactPage() {
                   </div>
                 </CardContent>
               </Card>
+
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-2">Redes Sociais</h3>
+                <div className="flex space-x-4">
+                  <Link
+                    href="https://www.facebook.com/rupturacoletivo/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-500 hover:text-red-600"
+                  >
+                    <SiFacebook className="h-6 w-6" />
+                    <span className="sr-only">Facebook</span>
+                  </Link>
+                  <Link
+                    href="https://x.com/coletivoruptura"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-500 hover:text-red-600"
+                  >
+                    <SiX className="h-6 w-6" />
+                    <span className="sr-only">X (antigo Twitter)</span>
+                  </Link>
+                  <Link
+                    href="https://www.instagram.com/coletivo_ruptura/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-500 hover:text-red-600"
+                  >
+                    <SiInstagram className="h-6 w-6" />
+                    <span className="sr-only">Instagram</span>
+                  </Link>
+                </div>
+              </div>
             </div>
 
             {/* Contact Form */}

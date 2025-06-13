@@ -16,11 +16,6 @@ export default function Footer() {
               Grupo Comunista pela abolição da Família, da Propriedade Privada e a extinção do Estado; pela recuperação
               do Programa Comunista e a auto-emancipação do proletariado.
             </p>
-            <p className="mt-2 text-sm text-gray-600">
-              Centro Social A Ingovernável
-              <br />
-              Lisboa, Portugal
-            </p>
             <div className="mt-4 flex space-x-4">
               <Link href="https://www.facebook.com/rupturacoletivo/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
                 <SiFacebook className="h-5 w-5" />
