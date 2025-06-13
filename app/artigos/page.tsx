@@ -39,7 +39,7 @@ export default async function ArtigosPage({
               key={article.sys.id}
               className="group"
             >
-              <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[400px] flex flex-col">
+              <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[350px] flex flex-col">
                 <div className="relative h-48 w-full flex-shrink-0">
                   <Image
                     src={`https:${article.fields.capa.fields.file.url}`}
