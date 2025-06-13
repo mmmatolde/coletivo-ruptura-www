@@ -185,4 +185,59 @@ export async function getCategories(): Promise<string[]> {
     console.error('Erro ao buscar categorias:', error)
     return []
   }
+}
+
+// Função para buscar todas as tribunas
+export async function getTribunes(limit = 6, skip = 0): Promise<QueryResponse> {
+  try {
+    console.log('Buscando tribunas com params:', { limit, skip })
+    const response = await client.getEntries({
+      content_type: 'blog',
+      'fields.isArticle': false,
+      order: ['-sys.createdAt'],
+      limit,
+      skip,
+    })
+
+    console.log('Resposta do Contentful para tribunas:', {
+      total: response.total,
+      items: response.items.map(item => ({
+        id: item.sys.id,
+        title: item.fields.title,
+        isArticle: item.fields.isArticle
+      }))
+    })
+
+    return {
+      articles: response.items as unknown as BlogFields[],
+      total: response.total,
+      skip: response.skip,
+      limit: response.limit,
+    }
+  } catch (error) {
+    console.error('Erro ao buscar tribunas:', error)
+    return {
+      articles: [],
+      total: 0,
+      skip: 0,
+      limit,
+    }
+  }
+}
+
+// Função para buscar uma tribuna específica pelo ID
+export async function getTribuneById(id: string): Promise<BlogFields | null> {
+  try {
+    const tribune = await client.getEntry(id)
+    
+    // Verifica se é uma tribuna
+    if (tribune.fields.isArticle) {
+      return null
+    }
+
+    return tribune as unknown as BlogFields
+  } catch (error) {
+    console.error('Erro ao buscar tribuna:', error)
+    return null
+  }
 } 

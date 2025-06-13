@@ -51,7 +51,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/tribune" className="text-sm text-gray-600 hover:text-red-600">
+                <Link href="/tribuna" className="text-sm text-gray-600 hover:text-red-600">
                   Tribuna Pública
                 </Link>
               </li>

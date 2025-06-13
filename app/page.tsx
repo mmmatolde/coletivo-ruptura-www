@@ -194,7 +194,7 @@ export default async function HomePage() {
               <h3 className="mt-4 font-heading text-xl font-bold">Tribuna Pública</h3>
               <p className="mt-2 text-gray-600">Participa em debates e discussões sobre temas da atualidade</p>
               <Link
-                href="/tribune"
+                href="/tribuna"
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Ir para a tribuna

@@ -12,7 +12,7 @@ const routes = [
   { href: "/about", label: "Sobre Nós" },
   { href: "/agenda", label: "Agenda" },
   { href: "/artigos", label: "Artigos" },
-  { href: "/tribune", label: "Tribuna Pública" },
+  { href: "/tribuna", label: "Tribuna Pública" },
   { href: "/materials", label: "Material e Ações" },
   { href: "/texts", label: "Textos e Traduções" },
 ]
