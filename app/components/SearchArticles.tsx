@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FiSearch } from 'react-icons/fi'
 
@@ -9,6 +9,11 @@ export default function SearchArticles() {
   const [searchTerm, setSearchTerm] = useState('')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,9 +31,15 @@ export default function SearchArticles() {
       return
     }
 
-    startTransition(() => {
-      router.push(`/artigos/busca?q=${encodeURIComponent(trimmedTerm)}`)
-    })
+    if (isMounted) {
+      startTransition(() => {
+        router.push(`/artigos/busca?q=${encodeURIComponent(trimmedTerm)}`)
+      })
+    }
+  }
+
+  if (!isMounted) {
+    return null
   }
 
   return (

@@ -3,9 +3,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
-import { Suspense } from "react"
 
-function NotFoundContent() {
+export default function NotFound() {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gray-50">
       <div className="container px-4 py-16 text-center">
@@ -24,20 +23,5 @@ function NotFoundContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function NotFound() {
-  return (
-    <Suspense fallback={
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
-        </div>
-      </div>
-    }>
-      <NotFoundContent />
-    </Suspense>
   )
 } 
