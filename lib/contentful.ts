@@ -240,4 +240,31 @@ export async function getTribuneById(id: string): Promise<BlogFields | null> {
     console.error('Erro ao buscar tribuna:', error)
     return null
   }
+}
+
+// Função para buscar as publicações mais recentes (artigos e tribunas)
+export async function getRecentPublications(limit = 6, skip = 0): Promise<QueryResponse> {
+  try {
+    const response = await client.getEntries({
+      content_type: 'blog',
+      order: ['-sys.createdAt'],
+      limit,
+      skip,
+    })
+
+    return {
+      articles: response.items as unknown as BlogFields[],
+      total: response.total,
+      skip: response.skip,
+      limit: response.limit,
+    }
+  } catch (error) {
+    console.error('Erro ao buscar publicações recentes:', error)
+    return {
+      articles: [],
+      total: 0,
+      skip: 0,
+      limit,
+    }
+  }
 } 

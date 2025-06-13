@@ -3,11 +3,12 @@ import Image from "next/image"
 import { ArrowRight, Calendar, FileText, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { getArticles } from "@/lib/contentful"
+import { getArticles, getRecentPublications } from "@/lib/contentful"
 
 export default async function HomePage() {
   // Buscar os 3 artigos mais recentes
   const { articles } = await getArticles(3, 0)
+  const { articles: publications } = await getRecentPublications(3, 0)
 
   return (
     <div className="flex flex-col">
@@ -111,20 +112,23 @@ export default async function HomePage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {articles.map((article) => (
-              <Card key={article.sys.id} className="group overflow-hidden transition-all hover:shadow-md">
+            {publications.map((publication) => (
+              <Card key={publication.sys.id} className="group overflow-hidden transition-all hover:shadow-md">
                 <div className="relative h-48 overflow-hidden">
                   <Image
-                    src={`https:${article.fields.capa.fields.file.url}`}
-                    alt={article.fields.title}
+                    src={`https:${publication.fields.capa.fields.file.url}`}
+                    alt={publication.fields.title}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
+                  <span className="absolute top-2 right-2 rounded-md bg-zinc-900/60 px-2 py-1 text-xs font-medium text-white z-10">
+                    {publication.fields.isArticle ? 'Artigo' : 'Tribuna Pública'}
+                  </span>
                 </div>
                 <CardHeader>
-                  <CardTitle className="font-heading text-xl">{article.fields.title}</CardTitle>
+                  <CardTitle className="font-heading text-xl">{publication.fields.title}</CardTitle>
                   <CardDescription>
-                    {new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
+                    {new Date(publication.fields.date || publication.sys.createdAt).toLocaleDateString('pt-PT', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric'
@@ -133,12 +137,12 @@ export default async function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Por {article.fields.autoria}
+                    Por {publication.fields.autoria}
                   </p>
                 </CardContent>
                 <CardFooter>
                   <Link
-                    href={`/artigos/${article.sys.id}`}
+                    href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna/${publication.sys.id}`}
                     className="flex items-center text-sm font-medium text-red-600 hover:underline"
                   >
                     Ler mais <ArrowRight className="ml-1 h-4 w-4" />

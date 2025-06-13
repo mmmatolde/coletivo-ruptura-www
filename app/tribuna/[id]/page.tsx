@@ -56,7 +56,7 @@ export default async function TribunaPage({ params }: { params: { id: string } }
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative py-40 text-white md:py-64">
+      <section className="relative min-h-[450px] text-white">
         <div className="absolute inset-0">
           <Image
             src={`https:${tribune.fields.capa.fields.file.url}`}
@@ -66,6 +66,9 @@ export default async function TribunaPage({ params }: { params: { id: string } }
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50"></div>
+        </div>
+        <div className="container absolute bottom-0 left-1/2 -translate-x-1/2 text-center z-10">
+          <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl mb-8">{tribune.fields.title}</h1>
         </div>
       </section>
 
@@ -94,6 +97,46 @@ export default async function TribunaPage({ params }: { params: { id: string } }
               {documentToReactComponents(tribune.fields.texto, options)}
             </div>
           </article>
+        </div>
+      </section>
+
+      {/* Seção de Comentários */}
+      <section className="bg-gray-100 py-16 dark:bg-zinc-800">
+        <div className="container mx-auto max-w-4xl px-4">
+          <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Comentários</h2>
+
+          {/* Formulário de Comentários */}
+          <div className="bg-white dark:bg-zinc-700 p-6 rounded-lg shadow-md mb-8">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Deixe o seu comentário</h3>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
+                <input
+                  type="text"
+                  id="name"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                />
+              </div>
+              <div>
+                <label htmlFor="comment" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Comentário</label>
+                <textarea
+                  id="comment"
+                  rows={4}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Submeter Comentário
+              </button>
+            </form>
+          </div>
+
+          {/* Lista de Comentários (Exemplo Estático) */}
+          <div className="space-y-6">
+          </div>
         </div>
       </section>
     </div>
