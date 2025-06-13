@@ -41,6 +41,11 @@ export default async function ArtigoPage({ params }: { params: { id: string } })
     notFound()
   }
 
+  console.log('Data do artigo:', {
+    dataManual: article.fields.date,
+    dataCriacao: article.sys.createdAt
+  })
+
   return (
     <main className="container mx-auto px-4 py-8">
       <article className="max-w-4xl mx-auto">
@@ -58,10 +63,15 @@ export default async function ArtigoPage({ params }: { params: { id: string } })
         {/* Título */}
         <h1 className="text-4xl font-bold mb-4">{article.fields.title}</h1>
 
-        {/* Autor */}
-        <p className="text-gray-600 dark:text-gray-300 mb-8">
-          Por {article.fields.autoria}
-        </p>
+        {/* Autor e Data */}
+        <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-300 mb-8">
+          <p>Por {article.fields.autoria}</p>
+          <p>{new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })}</p>
+        </div>
 
         {/* Conteúdo */}
         <div className="prose dark:prose-invert max-w-none">

@@ -52,9 +52,14 @@ export default async function BuscaPage({
                     <h2 className="text-xl font-semibold mb-2 group-hover:text-red-600">
                       {article.fields.title}
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      Por {article.fields.autoria}
-                    </p>
+                    <div className="flex flex-col gap-1 text-gray-600 dark:text-gray-300">
+                      <p>Por {article.fields.autoria}</p>
+                      <p>{new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}</p>
+                    </div>
                   </div>
                 </article>
               </Link>

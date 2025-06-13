@@ -16,6 +16,7 @@ export interface BlogFields {
     }
     texto: Document
     autoria: string
+    date: string
   }
   sys: {
     id: string
@@ -74,6 +75,8 @@ export async function getArticleById(id: string): Promise<BlogFields | null> {
     if (!article.fields.isArticle) {
       return null
     }
+
+    console.log('Resposta do Contentful:', JSON.stringify(article, null, 2))
 
     return article as unknown as BlogFields
   } catch (error) {

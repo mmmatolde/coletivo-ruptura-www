@@ -124,7 +124,7 @@ export default async function HomePage() {
                 <CardHeader>
                   <CardTitle className="font-heading text-xl">{article.fields.title}</CardTitle>
                   <CardDescription>
-                    {new Date(article.sys.createdAt).toLocaleDateString('pt-PT', {
+                    {new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric'
