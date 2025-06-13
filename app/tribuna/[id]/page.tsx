@@ -34,6 +34,9 @@ const options = {
     [BLOCKS.UL_LIST]: (node: any, children: React.ReactNode) => (
       <ul className="list-disc pl-5 mb-4 text-gray-700 dark:text-gray-300">{children}</ul>
     ),
+    [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
+      <ol className="list-decimal pl-5 mb-4 text-gray-700 dark:text-gray-300">{children}</ol>
+    ),
     [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
       <li className="mb-2">{children}</li>
     ),
