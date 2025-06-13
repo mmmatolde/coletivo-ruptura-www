@@ -4,6 +4,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
+export const dynamic = 'force-static'
+export const revalidate = false
+
 export default function NotFound() {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-gray-50">

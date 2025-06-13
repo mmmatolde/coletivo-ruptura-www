@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    verbose: true,
+  },
+  output: 'standalone',
 }
 
 export default nextConfig
