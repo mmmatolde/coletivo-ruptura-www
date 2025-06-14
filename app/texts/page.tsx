@@ -1,96 +1,76 @@
-import Link from "next/link"
-import { ArrowRight, BookOpen, Download, Search } from "lucide-react"
+import { getTexts } from '@/lib/contentful'
+import { staticTexts } from './static-content'
+import Link from 'next/link'
+import Image from 'next/image'
+import { ArrowRight, Calendar, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Document } from '@contentful/rich-text-types'
 
-export default function TextsPage() {
-  // Sample texts data
-  const texts = {
-    original: [
-      {
-        id: 1,
-        title: "Estratégias para a Organização Política",
-        author: "Colectivo Ruptura",
-        date: "Maio 2025",
-        description: "Análise sobre as estratégias de organização política no contexto atual.",
-        category: "Teoria Política",
-        pages: 24,
-      },
-      {
-        id: 2,
-        title: "Crise Ecológica e Alternativas",
-        author: "Colectivo Ruptura",
-        date: "Abril 2025",
-        description: "Reflexões sobre a crise ecológica e as alternativas a partir de uma perspetiva anticapitalista.",
-        category: "Ecologia",
-        pages: 32,
-      },
-      {
-        id: 3,
-        title: "Feminismo e Luta de Classes",
-        author: "Colectivo Ruptura",
-        date: "Março 2025",
-        description: "Análise das interseções entre a luta feminista e a luta de classes.",
-        category: "Feminismo",
-        pages: 28,
-      },
-      {
-        id: 4,
-        title: "Memória Histórica e Lutas Atuais",
-        author: "Colectivo Ruptura",
-        date: "Fevereiro 2025",
-        description: "A importância da memória histórica na construção das lutas sociais atuais.",
-        category: "História",
-        pages: 36,
-      },
-    ],
-    translations: [
-      {
-        id: 1,
-        title: "A Revolução do Comum",
-        originalTitle: "The Revolution of the Common",
-        originalAuthor: "Jane Smith",
-        translator: "Colectivo Ruptura",
-        date: "Maio 2025",
-        description: "Ensaio sobre a importância dos bens comuns e as formas de organização coletiva.",
-        category: "Teoria Política",
-        pages: 42,
-      },
-      {
-        id: 2,
-        title: "Ecologia e Anticapitalismo",
-        originalTitle: "Ecology and Anticapitalism",
-        originalAuthor: "John Green",
-        translator: "Colectivo Ruptura",
-        date: "Abril 2025",
-        description: "Análise da relação entre a crise ecológica e o sistema capitalista.",
-        category: "Ecologia",
-        pages: 38,
-      },
-      {
-        id: 3,
-        title: "Feminismo para os 99%",
-        originalTitle: "Feminism for the 99%",
-        originalAuthor: "Collective Authors",
-        translator: "Colectivo Ruptura",
-        date: "Março 2025",
-        description: "Manifesto feminista que propõe um feminismo anticapitalista, antirracista e anti-imperialista.",
-        category: "Feminismo",
-        pages: 30,
-      },
-    ],
-  }
+interface ContentfulText {
+  sys: {
+    id: string;
+    createdAt: string;
+  };
+  fields: {
+    originalOuTraducao: boolean;
+    title: string;
+    capa: {
+      fields: {
+        file: {
+          url: string;
+        };
+      };
+    };
+    texto: Document;
+    autoria: string;
+    date?: string;
+  };
+}
+
+export const revalidate = 3600 // revalidar a cada hora
+
+export default async function TextsPage({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) {
+  const params = await searchParams
+  const page = Number(params?.page) || 1
+  const limit = 6
+  const skip = (page - 1) * limit
+
+  const { texts: contentfulTexts, total } = await getTexts(limit, skip)
+  const totalPages = Math.ceil(total / limit)
+
+  // Combinar textos estáticos e do Contentful
+  const allTexts = [
+    ...staticTexts,
+    ...contentfulTexts.map(text => {
+      const fields = text.fields as ContentfulText['fields']
+      return {
+        id: text.sys.id,
+        originalOuTraducao: fields.originalOuTraducao,
+        title: fields.title,
+        capa: {
+          url: `https:${fields.capa.fields.file.url}`
+        },
+        texto: fields.texto,
+        autoria: fields.autoria,
+        date: fields.date || text.sys.createdAt
+      }
+    })
+  ]
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-red-700 to-red-500 py-16 text-white md:py-24">
+      <section className="relative bg-gradient-to-b from-red-600 to-red-900 py-16 text-white md:py-24">
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Textos e Traduções</h1>
-            <p className="mt-6 text-xl font-medium">Biblioteca de textos políticos e traduções</p>
+            <p className="mt-6 text-xl font-medium">Biblioteca de textos originais e traduções</p>
           </div>
         </div>
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
@@ -99,202 +79,101 @@ export default function TextsPage() {
       {/* Search and Filter */}
       <section className="border-b py-8">
         <div className="container">
-          <div className="mx-auto max-w-3xl">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input type="search" placeholder="Pesquisar textos..." className="pl-10" />
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <div className="w-full md:w-1/3">
+              <div className="relative">
+                <Input type="search" placeholder="Pesquisar textos..." className="w-full" />
+              </div>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" size="sm" className="border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
                 Todos
               </Button>
               <Button variant="outline" size="sm">
-                Teoria Política
+                Originais
               </Button>
               <Button variant="outline" size="sm">
-                Feminismo
-              </Button>
-              <Button variant="outline" size="sm">
-                Ecologia
-              </Button>
-              <Button variant="outline" size="sm">
-                História
+                Traduções
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Texts Tabs */}
+      {/* Texts Grid */}
       <section className="py-16">
         <div className="container">
-          <Tabs defaultValue="original" className="mx-auto max-w-5xl">
-            <div className="mb-8 text-center">
-              <TabsList className="inline-flex">
-                <TabsTrigger value="original" className="text-sm">
-                  Textos Originais
-                </TabsTrigger>
-                <TabsTrigger value="translations" className="text-sm">
-                  Traduções
-                </TabsTrigger>
-              </TabsList>
-            </div>
+          <div className="grid gap-8 md:grid-cols-2">
+            {allTexts.map((text) => (
+              <Link
+                key={text.id}
+                href={`/texts/${text.id}`}
+                className="block transition-colors hover:text-red-600"
+              >
+                <Card className="group overflow-hidden transition-all hover:shadow-md">
+                  <div className="flex flex-col md:flex-row h-full">
+                    <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
+                      <Image
+                        src={text.capa.url}
+                        alt={text.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <CardHeader className="p-0 pb-3">
+                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{text.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" /> 
+                          {new Date(text.date).toLocaleDateString('pt-PT', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-0 flex-grow">
+                        <p className="text-sm text-gray-600 line-clamp-3">
+                          {typeof text.texto === 'string' ? text.texto : 'Texto disponível'}
+                        </p>
+                      </CardContent>
+                      <CardFooter className="p-0 pt-4 mt-auto">
+                        <div className="flex items-center justify-between w-full text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <User className="h-4 w-4" /> {text.autoria}
+                          </div>
+                          <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
+                            {text.originalOuTraducao ? 'Tradução' : 'Original'}
+                          </div>
+                        </div>
+                      </CardFooter>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
 
-            {/* Original Texts Tab */}
-            <TabsContent value="original">
-              <div className="grid gap-6 md:grid-cols-2">
-                {texts.original.map((text) => (
-                  <Card key={text.id}>
-                    <CardHeader>
-                      <div className="mb-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
-                        {text.category}
-                      </div>
-                      <CardTitle className="font-heading text-xl">{text.title}</CardTitle>
-                      <CardDescription>
-                        {text.author} • {text.date} • {text.pages} páginas
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{text.description}</p>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button asChild variant="outline" size="sm" className="text-red-600">
-                        <Link href={`/texts/${text.id}`}>
-                          <BookOpen className="mr-2 h-4 w-4" /> Ler
-                        </Link>
-                      </Button>
-                      <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                        <Link href={`/texts/${text.id}/download`}>
-                          <Download className="mr-2 h-4 w-4" /> Descarregar PDF
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-12 flex justify-center">
+              <div className="flex items-center space-x-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <Link
+                    key={pageNum}
+                    href={`/texts?page=${pageNum}`}
+                    className={`px-4 py-2 rounded ${
+                      pageNum === page
+                        ? 'bg-red-600 text-white'
+                        : 'bg-gray-200 dark:bg-zinc-700 hover:bg-red-100 dark:hover:bg-red-900'
+                    }`}
+                  >
+                    {pageNum}
+                  </Link>
                 ))}
               </div>
-            </TabsContent>
-
-            {/* Translations Tab */}
-            <TabsContent value="translations">
-              <div className="grid gap-6 md:grid-cols-2">
-                {texts.translations.map((text) => (
-                  <Card key={text.id}>
-                    <CardHeader>
-                      <div className="mb-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
-                        {text.category}
-                      </div>
-                      <CardTitle className="font-heading text-xl">{text.title}</CardTitle>
-                      <CardDescription>
-                        Tradução de "{text.originalTitle}" de {text.originalAuthor} • {text.date} • {text.pages} páginas
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{text.description}</p>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button asChild variant="outline" size="sm" className="text-red-600">
-                        <Link href={`/texts/translations/${text.id}`}>
-                          <BookOpen className="mr-2 h-4 w-4" /> Ler
-                        </Link>
-                      </Button>
-                      <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                        <Link href={`/texts/translations/${text.id}/download`}>
-                          <Download className="mr-2 h-4 w-4" /> Descarregar PDF
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      {/* Reading Lists */}
-      <section className="bg-gray-100 py-16">
-        <div className="container">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-8 text-center font-heading text-3xl font-bold text-gray-900">
-              Listas de Leitura Recomendadas
-            </h2>
-            <div className="grid gap-6 md:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-heading text-xl">Introdução ao Pensamento Crítico</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Uma seleção de textos básicos para introdução ao pensamento crítico e à teoria política.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="/texts/lists/1"
-                    className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                  >
-                    Ver lista <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-heading text-xl">Feminismo e Anticapitalismo</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Textos que exploram as conexões entre a luta feminista e a crítica ao capitalismo.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="/texts/lists/2"
-                    className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                  >
-                    Ver lista <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-heading text-xl">Ecologia e Crise Climática</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Uma seleção de textos sobre a crise ecológica e as alternativas a partir de uma perspetiva crítica.
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href="/texts/lists/3"
-                    className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                  >
-                    Ver lista <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16">
-        <div className="container">
-          <div className="mx-auto max-w-3xl rounded-lg border bg-white p-8 text-center shadow-sm">
-            <h2 className="font-heading text-2xl font-bold text-gray-900">
-              Queres contribuir com textos ou traduções?
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              Se escreveste textos ou realizaste traduções que possam ser de interesse para o colectivo, podes
-              partilhá-los connosco.
-            </p>
-            <div className="mt-6">
-              <Button asChild className="bg-red-600 text-white hover:bg-red-700">
-                <Link href="/contact">Enviar Contribuição</Link>
-              </Button>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </div>

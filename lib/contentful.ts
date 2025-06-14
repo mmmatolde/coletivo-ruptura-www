@@ -267,4 +267,18 @@ export async function getRecentPublications(limit = 6, skip = 0): Promise<QueryR
       limit,
     }
   }
+}
+
+export async function getTexts(limit: number = 10, skip: number = 0) {
+  const response = await client.getEntries({
+    content_type: 'textosETraducoes',
+    limit,
+    skip,
+    order: '-sys.createdAt'
+  });
+
+  return {
+    texts: response.items,
+    total: response.total
+  };
 } 
