@@ -130,7 +130,7 @@ export default async function AgendaPage() {
                 {pastEvents.map((event) => {
                   console.log('URL da capa do evento (past):', event.fields.capa?.fields?.file?.url);
                   return (
-                  <Card key={event.sys.id} className="overflow-hidden opacity-80">
+                  <Card key={event.sys.id} className="overflow-hidden">
                     <div className="flex flex-col md:flex-row">
                       {event.fields.capa && event.fields.capa.fields.file && (
                         <div className="relative w-full h-48 md:w-1/3 flex-shrink-0 overflow-hidden">
