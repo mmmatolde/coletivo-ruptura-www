@@ -2,11 +2,10 @@ import { getTexts } from '@/lib/contentful'
 import { staticTexts } from './static-content'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Calendar, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Calendar, User } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Document } from '@contentful/rich-text-types'
+import { TextFilters } from './components/TextFilters'
 
 interface ContentfulText {
   sys: {
@@ -34,19 +33,24 @@ export const revalidate = 3600 // revalidar a cada hora
 export default async function TextsPage({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams: { 
+    page?: string;
+    search?: string;
+    filter?: 'all' | 'original' | 'translation';
+  }
 }) {
   const params = await searchParams
   const page = Number(params?.page) || 1
+  const search = params?.search || ''
+  const filter = params?.filter || 'all'
   const limit = 6
   const skip = (page - 1) * limit
 
   const { texts: contentfulTexts, total } = await getTexts(limit, skip)
   const totalPages = Math.ceil(total / limit)
 
-  // Combinar textos estáticos e do Contentful
+  // Combinar textos estáticos e do Contentful, com os estáticos sempre depois
   const allTexts = [
-    ...staticTexts,
     ...contentfulTexts.map(text => {
       const fields = text.fields as ContentfulText['fields']
       return {
@@ -60,8 +64,22 @@ export default async function TextsPage({
         autoria: fields.autoria,
         date: fields.date || text.sys.createdAt
       }
-    })
+    }),
+    ...staticTexts
   ]
+
+  // Aplicar filtros
+  const filteredTexts = allTexts.filter(text => {
+    const matchesSearch = search === '' || 
+      text.title.toLowerCase().includes(search.toLowerCase()) ||
+      text.autoria.toLowerCase().includes(search.toLowerCase())
+    
+    const matchesFilter = filter === 'all' || 
+      (filter === 'original' && !text.originalOuTraducao) ||
+      (filter === 'translation' && text.originalOuTraducao)
+
+    return matchesSearch && matchesFilter
+  })
 
   return (
     <div className="flex flex-col">
@@ -79,24 +97,7 @@ export default async function TextsPage({
       {/* Search and Filter */}
       <section className="border-b py-8">
         <div className="container">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="w-full md:w-1/3">
-              <div className="relative">
-                <Input type="search" placeholder="Pesquisar textos..." className="w-full" />
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" className="border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
-                Todos
-              </Button>
-              <Button variant="outline" size="sm">
-                Originais
-              </Button>
-              <Button variant="outline" size="sm">
-                Traduções
-              </Button>
-            </div>
-          </div>
+          <TextFilters />
         </div>
       </section>
 
@@ -104,25 +105,26 @@ export default async function TextsPage({
       <section className="py-16">
         <div className="container">
           <div className="grid gap-8 md:grid-cols-2">
-            {allTexts.map((text) => (
+            {filteredTexts.map((text) => (
               <Link
                 key={text.id}
                 href={`/texts/${text.id}`}
                 className="block transition-colors hover:text-red-600"
               >
-                <Card className="group overflow-hidden transition-all hover:shadow-md">
+                <Card className="group overflow-hidden transition-all hover:shadow-md h-[300px]">
                   <div className="flex flex-col md:flex-row h-full">
-                    <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
+                    <div className="relative h-48 w-full md:h-full md:w-1/3">
                       <Image
                         src={text.capa.url}
                         alt={text.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
                     <div className="flex flex-1 flex-col p-6">
                       <CardHeader className="p-0 pb-3">
-                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{text.title}</CardTitle>
+                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{text.title}</CardTitle>
                         <CardDescription className="flex items-center gap-2">
                           <Calendar className="h-4 w-4" /> 
                           {new Date(text.date).toLocaleDateString('pt-PT', {
@@ -161,7 +163,7 @@ export default async function TextsPage({
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                   <Link
                     key={pageNum}
-                    href={`/texts?page=${pageNum}`}
+                    href={`/texts?page=${pageNum}&search=${search}&filter=${filter}`}
                     className={`px-4 py-2 rounded ${
                       pageNum === page
                         ? 'bg-red-600 text-white'
