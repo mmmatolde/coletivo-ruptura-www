@@ -25,6 +25,32 @@ export interface BlogFields {
   }
 }
 
+// Definindo o tipo para os campos dos Eventos
+export interface EventFields {
+  fields: {
+    title: string
+    dataEHora: string // Será uma string ISO 8601 do Contentful
+    localizacao: {
+      lat: number
+      lon: number
+    }
+    morada?: string // Novo campo para a morada
+    capa: {
+      fields: {
+        file: {
+          url: string
+        }
+      }
+    }
+    descricao: string
+  }
+  sys: {
+    id: string
+    createdAt: string
+    updatedAt: string
+  }
+}
+
 // Configuração do cliente Contentful
 export const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID!,
@@ -33,6 +59,13 @@ export const client = createClient({
 
 interface QueryResponse {
   articles: BlogFields[]
+  total: number
+  skip: number
+  limit: number
+}
+
+interface EventQueryResponse {
+  events: EventFields[]
   total: number
   skip: number
   limit: number
@@ -281,4 +314,40 @@ export async function getTexts(limit: number = 10, skip: number = 0) {
     texts: response.items,
     total: response.total
   };
+}
+
+// Função para buscar todos os eventos
+export async function getEvents(limit = 6, skip = 0): Promise<EventQueryResponse> {
+  try {
+    const response = await client.getEntries({
+      content_type: 'eventos',
+      limit,
+      skip,
+    })
+
+    return {
+      events: response.items as unknown as EventFields[],
+      total: response.total,
+      skip: response.skip,
+      limit: response.limit,
+    }
+  } catch (error) {
+    console.error('Erro ao buscar eventos:', error)
+    return {
+      events: [],
+      total: 0,
+      skip: 0,
+      limit,
+    }
+  }
+}
+
+export async function getEventById(id: string): Promise<EventFields | null> {
+  try {
+    const response = await client.getEntry(id)
+    return response as unknown as EventFields
+  } catch (error) {
+    console.error('Erro ao buscar evento:', error)
+    return null
+  }
 } 
