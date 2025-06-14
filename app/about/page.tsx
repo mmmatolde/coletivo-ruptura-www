@@ -73,9 +73,7 @@ export default function AboutPage() {
       <section className="relative bg-gradient-to-b from-red-600 to-red-900 py-20 text-white md:py-28">
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Coletivo Ruptura</h1>
-            <p className="mt-2 text-xl font-medium">Uma Apresentação</p>
-            <p className="mt-6 text-lg font-medium">Conhece a nossa história e pontos de unidade</p>
+            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Conhece a nossa história e pontos de unidade</h1>
           </div>
         </div>
         <div className="absolute inset-0 bg-[url('/images/revolutionary-background.png')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>

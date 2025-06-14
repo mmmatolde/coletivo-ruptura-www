@@ -54,6 +54,12 @@ const options = {
         {children}
       </blockquote>
     ),
+    [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
+      <ol className="list-decimal pl-5 mb-4">{children}</ol>
+    ),
+    [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
+      <li className="mb-2">{children}</li>
+    ),
   },
 }
 
@@ -97,41 +103,34 @@ export default async function TextPage({
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-red-600 to-red-900 py-16 text-white md:py-24">
-        <div className="container relative z-10">
-          <div className="mx-auto max-w-3xl">
-            <Button asChild variant="ghost" className="mb-8 text-white hover:bg-red-700">
-              <Link href="/texts">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para Textos
-              </Link>
-            </Button>
-            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">{text.title}</h1>
-            <div className="mt-6 flex items-center gap-4 text-lg">
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5" /> {text.autoria}
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                {new Date(text.date).toLocaleDateString('pt-PT', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
-              </div>
-              <div className="rounded-full bg-white/10 px-3 py-1 text-sm">
-                {text.originalOuTraducao ? 'Tradução' : 'Original'}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
-      </section>
-
       {/* Content */}
       <section className="py-16">
         <div className="container">
           <div className="mx-auto max-w-3xl">
+            <div className="mb-8">
+              <Button asChild variant="ghost" className="mb-8 text-gray-600 hover:bg-gray-100">
+                <Link href="/texts">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para Textos
+                </Link>
+              </Button>
+              <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">{text.title}</h1>
+              <div className="mt-6 flex items-center gap-4 text-lg text-gray-600">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5" /> {text.autoria}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  {new Date(text.date).toLocaleDateString('pt-PT', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  })}
+                </div>
+                <div className="rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700">
+                  {text.originalOuTraducao ? 'Tradução' : 'Texto'}
+                </div>
+              </div>
+            </div>
             <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-lg">
               <Image
                 src={text.capa.url}

@@ -54,6 +54,12 @@ const options = {
         {children}
       </blockquote>
     ),
+    [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
+      <ol className="list-decimal pl-5 mb-4">{children}</ol>
+    ),
+    [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
+      <li className="mb-2">{children}</li>
+    ),
   },
 }
 
@@ -174,7 +180,7 @@ export default async function TextsPage({
                             <User className="h-4 w-4" /> {text.autoria}
                           </div>
                           <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
-                            {text.originalOuTraducao ? 'Tradução' : 'Original'}
+                            {text.originalOuTraducao ? 'Tradução' : 'Texto'}
                           </div>
                         </div>
                       </CardFooter>
