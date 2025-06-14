@@ -69,7 +69,7 @@ export default async function TextsPage({
   searchParams: {
     page?: string;
     search?: string;
-    filter?: 'all' | 'original' | 'translation';
+    filter?: 'all' | 'textos' | 'translation';
   }
 }) {
   const params = await searchParams
@@ -106,7 +106,7 @@ export default async function TextsPage({
       text.title.toLowerCase().includes(search.toLowerCase())
     
     const matchesFilter = filter === 'all' || 
-      (filter === 'original' && !text.originalOuTraducao) ||
+      (filter === 'textos' && !text.originalOuTraducao) ||
       (filter === 'translation' && text.originalOuTraducao)
 
     return matchesSearch && matchesFilter
@@ -119,7 +119,7 @@ export default async function TextsPage({
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Textos e Traduções</h1>
-            <p className="mt-6 text-xl font-medium">Biblioteca de textos originais e traduções</p>
+            <p className="mt-6 text-xl font-medium">Biblioteca de textos e traduções</p>
           </div>
         </div>
         <div className="absolute inset-0 bg-[url('/iishmarx.jpg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>

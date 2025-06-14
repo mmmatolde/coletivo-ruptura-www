@@ -17,7 +17,7 @@ export function TextFilters() {
     router.push(`/texts?${params.toString()}`)
   }
 
-  const handleFilter = (value: 'all' | 'original' | 'translation') => {
+  const handleFilter = (value: 'all' | 'textos' | 'translation') => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('filter', value)
     params.set('page', '1')
@@ -49,10 +49,10 @@ export function TextFilters() {
         <Button 
           variant="outline" 
           size="sm"
-          className={`${filter === 'original' ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100' : ''}`}
-          onClick={() => handleFilter('original')}
+          className={`${filter === 'textos' ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100' : ''}`}
+          onClick={() => handleFilter('textos')}
         >
-          Originais
+          Textos
         </Button>
         <Button 
           variant="outline" 
