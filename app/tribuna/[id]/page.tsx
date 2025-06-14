@@ -20,9 +20,9 @@ const options = {
           <Image
             src={`https:${node.data.target.fields.file.url}`}
             alt={node.data.target.fields.title || 'Imagem incorporada'}
-            width={800}
-            height={600}
-            className="rounded-lg shadow-lg"
+            width={1200}
+            height={800}
+            className="w-full h-auto"
           />
         </div>
       )
