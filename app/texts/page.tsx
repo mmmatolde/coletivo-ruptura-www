@@ -4,7 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, User } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Document } from '@contentful/rich-text-types'
+import { Document, BLOCKS, MARKS } from '@contentful/rich-text-types'
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { TextFilters } from './components/TextFilters'
 
 interface ContentfulText {
@@ -30,10 +31,37 @@ interface ContentfulText {
 
 export const revalidate = 3600 // revalidar a cada hora
 
+const options = {
+  renderMark: {
+    [MARKS.BOLD]: (text: React.ReactNode) => <strong>{text}</strong>,
+    [MARKS.ITALIC]: (text: React.ReactNode) => <em>{text}</em>,
+    [MARKS.UNDERLINE]: (text: React.ReactNode) => <u>{text}</u>,
+  },
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
+      <p className="mb-4 text-justify">{children}</p>
+    ),
+    [BLOCKS.HEADING_1]: (node: any, children: React.ReactNode) => (
+      <h1 className="text-4xl font-bold mb-6">{children}</h1>
+    ),
+    [BLOCKS.HEADING_2]: (node: any, children: React.ReactNode) => (
+      <h2 className="text-3xl font-bold mb-4">{children}</h2>
+    ),
+    [BLOCKS.HEADING_3]: (node: any, children: React.ReactNode) => (
+      <h3 className="text-2xl font-bold mb-3">{children}</h3>
+    ),
+    [BLOCKS.QUOTE]: (node: any, children: React.ReactNode) => (
+      <blockquote className="border-l-4 border-red-600 pl-4 my-4 italic">
+        {children}
+      </blockquote>
+    ),
+  },
+}
+
 export default async function TextsPage({
   searchParams,
 }: {
-  searchParams: { 
+  searchParams: {
     page?: string;
     search?: string;
     filter?: 'all' | 'original' | 'translation';
@@ -71,8 +99,7 @@ export default async function TextsPage({
   // Aplicar filtros
   const filteredTexts = allTexts.filter(text => {
     const matchesSearch = search === '' || 
-      text.title.toLowerCase().includes(search.toLowerCase()) ||
-      text.autoria.toLowerCase().includes(search.toLowerCase())
+      text.title.toLowerCase().includes(search.toLowerCase())
     
     const matchesFilter = filter === 'all' || 
       (filter === 'original' && !text.originalOuTraducao) ||
@@ -135,9 +162,13 @@ export default async function TextsPage({
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="p-0 flex-grow">
-                        <p className="text-sm text-gray-600 line-clamp-3">
-                          {typeof text.texto === 'string' ? text.texto : 'Texto disponível'}
-                        </p>
+                        <div className="prose dark:prose-invert max-w-none text-sm text-gray-600 line-clamp-3">
+                          {typeof text.texto === 'object' && text.texto && 'nodeType' in text.texto
+                            ? documentToReactComponents(text.texto as Document, options)
+                            : typeof text.texto === 'string'
+                              ? <div dangerouslySetInnerHTML={{ __html: text.texto }} />
+                              : 'Texto disponível'}
+                        </div>
                       </CardContent>
                       <CardFooter className="p-0 pt-4 mt-auto">
                         <div className="flex items-center justify-between w-full text-sm text-gray-500">

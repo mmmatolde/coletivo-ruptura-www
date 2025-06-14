@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
-import { Document } from '@contentful/rich-text-types'
+import { Document, BLOCKS, MARKS } from '@contentful/rich-text-types'
 
 interface ContentfulText {
   sys: {
@@ -30,6 +30,33 @@ interface ContentfulText {
 }
 
 export const revalidate = 3600 // revalidar a cada hora
+
+const options = {
+  renderMark: {
+    [MARKS.BOLD]: (text: React.ReactNode) => <strong>{text}</strong>,
+    [MARKS.ITALIC]: (text: React.ReactNode) => <em>{text}</em>,
+    [MARKS.UNDERLINE]: (text: React.ReactNode) => <u>{text}</u>,
+  },
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
+      <p className="mb-4 text-justify">{children}</p>
+    ),
+    [BLOCKS.HEADING_1]: (node: any, children: React.ReactNode) => (
+      <h1 className="text-4xl font-bold mb-6">{children}</h1>
+    ),
+    [BLOCKS.HEADING_2]: (node: any, children: React.ReactNode) => (
+      <h2 className="text-3xl font-bold mb-4">{children}</h2>
+    ),
+    [BLOCKS.HEADING_3]: (node: any, children: React.ReactNode) => (
+      <h3 className="text-2xl font-bold mb-3">{children}</h3>
+    ),
+    [BLOCKS.QUOTE]: (node: any, children: React.ReactNode) => (
+      <blockquote className="border-l-4 border-red-600 pl-4 my-4 italic">
+        {children}
+      </blockquote>
+    ),
+  },
+}
 
 export default async function TextPage({
   params,
@@ -118,10 +145,7 @@ export default async function TextPage({
               />
             </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
-              {typeof text.texto === 'string' 
-                ? <div dangerouslySetInnerHTML={{ __html: text.texto }} />
-                : documentToReactComponents(text.texto as Document)
-              }
+              {documentToReactComponents(text.texto as Document, options)}
             </div>
           </div>
         </div>
