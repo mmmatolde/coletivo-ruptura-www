@@ -1,12 +1,44 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
-import { Calendar, Clock, MapPin } from "lucide-react"
+import { Calendar, Clock, MapPin, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { getEvents } from "@/lib/contentful"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import type { Document } from "@contentful/rich-text-types"
+import { useState, useEffect } from "react"
+
+interface EventFields {
+  title: string
+  dataEHora: string
+  descricao: Document
+  morada?: string
+  capa?: {
+    fields: {
+      file: {
+        url: string
+      }
+    }
+  }
+  ttuloDoFilmeexposicao?: string
+  legendas?: string
+}
+
+interface Event {
+  sys: {
+    id: string
+  }
+  fields: EventFields
+}
 
 const options = {
   renderNode: {
@@ -16,8 +48,133 @@ const options = {
   },
 }
 
-export default async function AgendaPage() {
-  const { events } = await getEvents(100, 0) // Busca até 100 eventos
+export default function AgendaPage() {
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [events, setEvents] = useState<Event[]>([])
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      const { events: loadedEvents } = await getEvents(100, 0)
+      setEvents(loadedEvents)
+    }
+    loadEvents()
+  }, [])
+
+  const handlePreviousMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
+  }
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+  }
+
+  const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ]
+
+  // Função para gerar os dias do mês
+  const generateCalendarDays = () => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
+    const startingDay = firstDay.getDay() || 7 // Ajusta para Segunda = 1, Domingo = 7
+
+    const days = []
+    const today = new Date()
+    const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year
+
+    // Adiciona dias do mês anterior
+    for (let i = 1; i < startingDay; i++) {
+      const prevMonthLastDay = new Date(year, month, 0).getDate()
+      const day = prevMonthLastDay - startingDay + i + 1
+      days.push(
+        <div key={`prev-${day}`} className="py-2 text-gray-400">
+          {day}
+        </div>
+      )
+    }
+
+    // Adiciona dias do mês atual
+    for (let day = 1; day <= daysInMonth; day++) {
+      const currentDay = new Date(year, month, day)
+      const isToday = isCurrentMonth && day === today.getDate()
+      const eventOnDay = events.find(event => {
+        const eventDate = new Date(event.fields.dataEHora)
+        return eventDate.getDate() === day && 
+               eventDate.getMonth() === month && 
+               eventDate.getFullYear() === year
+      })
+      const isPastEvent = eventOnDay && currentDay < today
+      const isFutureEvent = eventOnDay && currentDay >= today
+
+      let dayClassName = "py-2"
+      if (isToday) {
+        dayClassName += " rounded-full bg-amber-200 text-amber-900 font-medium"
+      } else if (isFutureEvent) {
+        dayClassName += " rounded-full bg-red-600 text-white"
+      } else if (isPastEvent) {
+        dayClassName += " rounded-full bg-red-100 text-red-600"
+      }
+
+      days.push(
+        <div key={day} className={dayClassName}>
+          {eventOnDay ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link 
+                    href={`/agenda/${eventOnDay.sys.id}`}
+                    className="block w-full h-full hover:opacity-80 transition-opacity"
+                  >
+                    {day}
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent 
+                  className="bg-white border border-red-100 shadow-lg p-3 max-w-[250px]"
+                  sideOffset={5}
+                >
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-red-900 leading-tight">
+                      {eventOnDay.fields.title}
+                    </h4>
+                    <div className="flex items-center gap-2 text-xs text-gray-600">
+                      <Clock className="h-4 w-4 shrink-0" />
+                      <span className="leading-none">
+                        {new Date(eventOnDay.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <div className="flex items-start text-xs text-gray-600">
+                      <MapPin className="h-4 w-4 shrink-0 mt-[2px]" />
+                      <span className="leading-relaxed -ml-[3.25px]">
+                        {eventOnDay.fields.morada || 'Localização não disponível'}
+                      </span>
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            day
+          )}
+        </div>
+      )
+    }
+
+    // Adiciona dias do próximo mês
+    const remainingDays = 42 - days.length // 6 semanas * 7 dias
+    for (let day = 1; day <= remainingDays; day++) {
+      days.push(
+        <div key={`next-${day}`} className="py-2 text-gray-400">
+          {day}
+        </div>
+      )
+    }
+
+    return days
+  }
 
   // Filtrar eventos futuros e passados
   const now = new Date()
@@ -192,7 +349,27 @@ export default async function AgendaPage() {
             <h2 className="mb-8 text-center font-heading text-3xl font-bold text-gray-900">Vista de Calendário</h2>
             <div className="rounded-lg border bg-white p-6 shadow-sm">
               <div className="text-center">
-                <p className="text-lg font-medium">Maio 2025</p>
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={handlePreviousMonth}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <p className="text-lg font-medium">
+                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-8 w-8"
+                    onClick={handleNextMonth}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
                 <div className="mt-4 grid grid-cols-7 gap-1 text-center text-sm">
                   <div className="font-medium">Seg</div>
                   <div className="font-medium">Ter</div>
@@ -201,62 +378,22 @@ export default async function AgendaPage() {
                   <div className="font-medium">Sex</div>
                   <div className="font-medium">Sáb</div>
                   <div className="font-medium">Dom</div>
-
-                  {/* Calendar days - first row */}
-                  <div className="py-2 text-gray-400">29</div>
-                  <div className="py-2 text-gray-400">30</div>
-                  <div className="py-2">1</div>
-                  <div className="py-2">2</div>
-                  <div className="py-2">3</div>
-                  <div className="py-2">4</div>
-                  <div className="py-2">5</div>
-
-                  {/* Calendar days - second row */}
-                  <div className="py-2">6</div>
-                  <div className="py-2">7</div>
-                  <div className="py-2">8</div>
-                  <div className="py-2">9</div>
-                  <div className="py-2">10</div>
-                  <div className="py-2">11</div>
-                  <div className="py-2">12</div>
-
-                  {/* Calendar days - third row */}
-                  <div className="py-2">13</div>
-                  <div className="py-2">14</div>
-                  <div className="py-2">15</div>
-                  <div className="py-2">16</div>
-                  <div className="py-2">17</div>
-                  <div className="py-2">18</div>
-                  <div className="py-2">19</div>
-
-                  {/* Calendar days - fourth row */}
-                  <div className="rounded-full bg-red-600 py-2 text-white">20</div>
-                  <div className="py-2">21</div>
-                  <div className="py-2">22</div>
-                  <div className="py-2">23</div>
-                  <div className="py-2">24</div>
-                  <div className="rounded-full bg-red-100 py-2 text-red-600">25</div>
-                  <div className="py-2">26</div>
-
-                  {/* Calendar days - fifth row */}
-                  <div className="py-2">27</div>
-                  <div className="py-2">28</div>
-                  <div className="py-2">29</div>
-                  <div className="py-2">30</div>
-                  <div className="py-2">31</div>
-                  <div className="py-2 text-gray-400">1</div>
-                  <div className="py-2 text-gray-400">2</div>
+                  {generateCalendarDays()}
                 </div>
               </div>
 
               <div className="mt-6 space-y-2">
                 <div className="flex items-center">
-                  <div className="mr-2 h-3 w-3 rounded-full bg-red-600"></div>
-                  <span className="text-sm">Assembleia Geral (20 Maio)</span>
+                  <div className="mr-2 h-3 w-3 rounded-full bg-red-100"></div>
+                  <span className="text-sm">Eventos Passados</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="mr-2 h-3 w-3 rounded-full bg-red-100"></div>
-                  <span className="text-sm">Workshop de Formação Política (25 Maio)</span>
+                  <div className="mr-2 h-3 w-3 rounded-full bg-amber-200"></div>
+                  <span className="text-sm text-amber-900">Hoje</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="mr-2 h-3 w-3 rounded-full bg-red-600"></div>
+                  <span className="text-sm">Eventos Futuros</span>
                 </div>
               </div>
             </div>
