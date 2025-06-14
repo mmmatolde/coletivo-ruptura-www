@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, User } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Document, BLOCKS, MARKS } from '@contentful/rich-text-types'
+import { Document, BLOCKS, MARKS, INLINES } from '@contentful/rich-text-types'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { TextFilters } from './components/TextFilters'
 
@@ -57,8 +57,14 @@ const options = {
     [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
       <ol className="list-decimal pl-5 mb-4">{children}</ol>
     ),
+    [BLOCKS.UL_LIST]: (node: any, children: React.ReactNode) => (
+      <ul className="list-disc pl-5 mb-4">{children}</ul>
+    ),
     [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
       <li className="mb-2">{children}</li>
+    ),
+    [INLINES.HYPERLINK]: (node: any, children: React.ReactNode) => (
+      <a href={node.data.uri} className="text-red-600 hover:underline">{children}</a>
     ),
   },
 }
