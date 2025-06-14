@@ -307,7 +307,7 @@ export async function getTexts(limit: number = 10, skip: number = 0) {
     content_type: 'textosETraducoes',
     limit,
     skip,
-    order: '-sys.createdAt'
+    order: ['-sys.createdAt']
   });
 
   return {
