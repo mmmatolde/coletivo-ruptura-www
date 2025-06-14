@@ -6,11 +6,11 @@ import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getEvents } from "@/lib/contentful"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
-import { BLOCKS } from "@contentful/rich-text-types"
+import type { Document } from "@contentful/rich-text-types"
 
 const options = {
   renderNode: {
-    [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
+    paragraph: (node: any, children: any) => (
       <p className="mb-4 text-justify">{children}</p>
     ),
   },

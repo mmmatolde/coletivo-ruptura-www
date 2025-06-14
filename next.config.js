@@ -2,7 +2,13 @@
 const nextConfig = {
   transpilePackages: ['contentful', '@contentful/rich-text-types'],
   images: {
-    domains: ['images.ctfassets.net'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+        pathname: '/**',
+      },
+    ],
   },
   webpack: (config) => {
     config.resolve.fallback = {
