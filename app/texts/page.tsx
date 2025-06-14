@@ -91,7 +91,7 @@ export default async function TextsPage({
             <p className="mt-6 text-xl font-medium">Biblioteca de textos originais e traduções</p>
           </div>
         </div>
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[url('/iishmarx.jpg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
       </section>
 
       {/* Search and Filter */}
