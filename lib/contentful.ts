@@ -1,6 +1,6 @@
-import { createClient } from 'contentful'
+import { createClient, type Entry } from 'contentful'
 import type { Document } from '@contentful/rich-text-types'
-import { type Entry, type EntryFieldTypes } from 'contentful'
+import { type EntryFieldTypes } from 'contentful'
 
 // Definindo o tipo para os campos do Blog
 export interface BlogFields {
@@ -236,10 +236,10 @@ export async function getTribunes(limit = 6, skip = 0): Promise<QueryResponse> {
 
     console.log('Resposta do Contentful para tribunas:', {
       total: response.total,
-      items: response.items.map(item => ({
+      items: response.items.map((item) => ({
         id: item.sys.id,
-        title: item.fields.title,
-        isArticle: item.fields.isArticle
+        title: (item.fields as BlogFields['fields']).title,
+        isArticle: (item.fields as BlogFields['fields']).isArticle
       }))
     })
 
