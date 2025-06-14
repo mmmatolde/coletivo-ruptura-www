@@ -74,7 +74,7 @@ export default async function TribunaPage({
                 href={`/tribuna/${tribune.sys.id}`}
                 className="block transition-colors hover:text-red-600"
               >
-                <Card className="group overflow-hidden transition-all hover:shadow-md">
+                <Card className="group h-full overflow-hidden transition-all hover:shadow-md">
                   <div className="flex flex-col md:flex-row h-full">
                     <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
                       <Image
@@ -84,21 +84,21 @@ export default async function TribunaPage({
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <div className="flex flex-1 flex-col p-6">
-                      <CardHeader className="p-0 pb-3">
-                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{tribune.fields.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" /> 
-                          {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                          })}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-0 flex-grow">
-                      </CardContent>
-                      <CardFooter className="p-0 pt-4 mt-auto">
+                    <div className="flex flex-1 flex-col justify-between p-6">
+                      <div>
+                        <CardHeader className="p-0 pb-3">
+                          <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{tribune.fields.title}</CardTitle>
+                          <CardDescription className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" /> 
+                            {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </CardDescription>
+                        </CardHeader>
+                      </div>
+                      <CardFooter className="p-0 pt-4">
                         <div className="flex items-center justify-between w-full text-sm text-gray-500">
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" /> {tribune.fields.autoria}
