@@ -1,12 +1,9 @@
 import Image from "next/image"
 import { Calendar, Clock, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { getEventById } from "@/lib/contentful"
 
 export default async function EventDetailsPage({ params }: { params: { id: string } }) {
-  console.log('ID do evento:', params.id)
   const event = await getEventById(params.id)
-  console.log('Evento encontrado:', event)
 
   if (!event) {
     return (
@@ -17,55 +14,81 @@ export default async function EventDetailsPage({ params }: { params: { id: strin
   }
 
   return (
-    <div className="flex flex-col">
-      {/* Event Details */}
-      <section className="py-16">
-        <div className="container">
-          <div className="mx-auto max-w-4xl">
-            <div className="grid gap-8 md:grid-cols-3">
-              {/* Main Content */}
-              <div className="md:col-span-2">
-                {event.fields.capa && event.fields.capa.fields.file && (
-                  <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-lg">
-                    <Image
-                      src={`https:${event.fields.capa.fields.file.url}`}
-                      alt={event.fields.title}
-                      fill
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
-                )}
-                <h1 className="mb-6 font-heading text-3xl font-bold text-gray-900">{event.fields.title}</h1>
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-600">{event.fields.descricao}</p>
-                </div>
-              </div>
+    <div className="container py-12">
+      <div className="mx-auto max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content Column */}
+        <div className="lg:col-span-2">
+          {/* Title */}
+          <h1 className="mb-6 text-4xl font-bold text-gray-900 leading-tight">{event.fields.title}</h1>
 
-              {/* Sidebar */}
-              <div>
-                <div className="rounded-lg border bg-white p-6 shadow-sm">
-                  <h2 className="mb-4 font-heading text-xl font-bold text-gray-900">Informações</h2>
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <Calendar className="mr-2 h-5 w-5 text-red-600" />
-                      <span>{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-2 h-5 w-5 text-red-600" />
-                      <span>{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="mr-2 h-5 w-5 text-red-600" />
-                      <span>{event.fields.morada || 'Localização não disponível'}</span>
-                    </div>
-                  </div>
+          {/* Event Cover Image */}
+          {event.fields.capa && event.fields.capa.fields.file && (
+            <div className="relative mb-8 aspect-[21/9] w-full overflow-hidden rounded-xl shadow-lg">
+              <Image
+                src={`https:${event.fields.capa.fields.file.url}`}
+                alt={event.fields.title}
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          )}
+
+          {/* Date, Time, Location Bar */}
+          <div className="mb-8 flex flex-wrap items-center gap-x-8 gap-y-4 text-base text-gray-700">
+            <div className="flex items-center">
+              <Calendar className="mr-2 h-5 w-5 shrink-0 text-gray-500" />
+              <span>{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
+            </div>
+            <div className="flex items-center">
+              <Clock className="mr-2 h-5 w-5 shrink-0 text-gray-500" />
+              <span>{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            <div className="flex items-center">
+              <MapPin className="mr-2 h-5 w-5 shrink-0 text-gray-500" />
+              <span>{event.fields.morada || 'Localização não disponível'}</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="prose prose-lg max-w-none">
+            <p className="text-justify text-gray-700 leading-relaxed">{event.fields.descricao}</p>
+          </div>
+        </div>
+
+        {/* Sidebar Column */}
+        <div className="lg:col-span-1">
+          <div className="rounded-lg border bg-gray-50 p-6 shadow-sm sticky top-8">
+            <h2 className="mb-4 text-xl font-bold text-gray-900">Informações do Evento</h2>
+            <div className="space-y-4 text-sm">
+              {event.fields.ttuloDoFilmeexposicao && (
+                <div>
+                  <p className="font-semibold text-gray-800">Título Original:</p>
+                  <p className="text-gray-700">{event.fields.ttuloDoFilmeexposicao}</p>
                 </div>
+              )}
+              {event.fields.legendas && (
+                <div>
+                  <p className="font-semibold text-gray-800">Legendas:</p>
+                  <p className="text-gray-700">{event.fields.legendas}</p>
+                </div>
+              )}
+              <div>
+                <p className="font-semibold text-gray-800">Data e Hora:</p>
+                <p className="text-gray-700">{new Date(event.fields.dataEHora).toLocaleDateString()} às {new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">Localização:</p>
+                <p className="text-gray-700">{event.fields.morada || 'Não disponível'}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800">Entrada:</p>
+                <p className="text-gray-700">✊ Entrada livre.</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 } 

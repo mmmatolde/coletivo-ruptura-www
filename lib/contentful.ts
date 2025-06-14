@@ -34,7 +34,7 @@ export interface EventFields {
       lat: number
       lon: number
     }
-    morada?: string // Novo campo para a morada
+    morada: string // Tornando morada obrigatória
     capa: {
       fields: {
         file: {
@@ -43,6 +43,8 @@ export interface EventFields {
       }
     }
     descricao: string
+    ttuloDoFilmeexposicao?: string // Campo corrigido para título de filme/exposição
+    legendas?: string // Campo corrigido para legendas
   }
   sys: {
     id: string

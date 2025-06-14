@@ -91,16 +91,16 @@ export default async function AgendaPage() {
                         </div>
                         <div className="flex w-full flex-col justify-center space-y-4 bg-gray-50 p-6 md:w-1/3">
                           <div className="flex items-center">
-                            <Calendar className="mr-2 h-5 w-5 text-red-600" />
-                            <span>{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
+                            <Calendar className="mr-2 h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center">
-                            <Clock className="mr-2 h-5 w-5 text-red-600" />
-                            <span>{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            <Clock className="mr-2 h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
                           <div className="flex items-center">
-                            <MapPin className="mr-2 h-5 w-5 text-red-600" />
-                            <span className="text-sm">
+                            <MapPin className="mr-2 h-4 w-4 text-gray-500 shrink-0" />
+                            <span className="text-sm text-gray-600">
                               {event.fields.morada || 'Localização não disponível'}
                             </span>
                           </div>
@@ -147,16 +147,16 @@ export default async function AgendaPage() {
                         </div>
                         <div className="flex w-full flex-col justify-center space-y-4 bg-gray-50 p-6 md:w-1/3">
                           <div className="flex items-center">
-                            <Calendar className="mr-2 h-5 w-5 text-gray-600" />
-                            <span>{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
+                            <Calendar className="mr-2 h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center">
-                            <Clock className="mr-2 h-5 w-5 text-gray-600" />
-                            <span>{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            <Clock className="mr-2 h-4 w-4 text-gray-500" />
+                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
                           <div className="flex items-center">
-                            <MapPin className="mr-2 h-5 w-5 text-gray-600" />
-                            <span className="text-sm">
+                            <MapPin className="mr-2 h-4 w-4 text-gray-500 shrink-0" />
+                            <span className="text-sm text-gray-600">
                               {event.fields.morada || 'Localização não disponível'}
                             </span>
                           </div>
