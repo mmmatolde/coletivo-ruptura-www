@@ -14,6 +14,19 @@ const options = {
     [MARKS.UNDERLINE]: (text: React.ReactNode) => <u>{text}</u>,
   },
   renderNode: {
+    [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+      return (
+        <div className="my-8">
+          <Image
+            src={`https:${node.data.target.fields.file.url}`}
+            alt={node.data.target.fields.title || 'Imagem incorporada'}
+            width={800}
+            height={600}
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+      )
+    },
     [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
       <p className="mb-4 text-justify text-gray-700 dark:text-gray-300">{children}</p>
     ),
