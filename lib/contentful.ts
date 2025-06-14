@@ -42,7 +42,7 @@ export interface EventFields {
         }
       }
     }
-    descricao: string
+    descricao: Document
     ttuloDoFilmeexposicao?: string // Campo corrigido para título de filme/exposição
     legendas?: string // Campo corrigido para legendas
   }

@@ -1,6 +1,16 @@
 import Image from "next/image"
 import { Calendar, Clock, MapPin } from "lucide-react"
 import { getEventById } from "@/lib/contentful"
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
+import { BLOCKS } from "@contentful/rich-text-types"
+
+const options = {
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
+      <p className="mb-4 text-justify">{children}</p>
+    ),
+  },
+}
 
 export default async function EventDetailsPage({ params }: { params: { id: string } }) {
   const event = await getEventById(params.id)
@@ -52,7 +62,7 @@ export default async function EventDetailsPage({ params }: { params: { id: strin
 
           {/* Description */}
           <div className="prose prose-lg max-w-none">
-            <p className="text-justify text-gray-700 leading-relaxed">{event.fields.descricao}</p>
+            {documentToReactComponents(event.fields.descricao, options)}
           </div>
         </div>
 

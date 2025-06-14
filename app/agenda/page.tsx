@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { getEvents } from "@/lib/contentful"
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
+import { BLOCKS } from "@contentful/rich-text-types"
+
+const options = {
+  renderNode: {
+    [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
+      <p className="mb-4 text-justify">{children}</p>
+    ),
+  },
+}
 
 export default async function AgendaPage() {
   const { events } = await getEvents(100, 0) // Busca até 100 eventos
@@ -78,7 +88,9 @@ export default async function AgendaPage() {
                               {event.fields.title}
                             </div>
                             <h3 className="font-heading text-xl font-bold">{event.fields.title}</h3>
-                            <p className="mt-2 text-gray-600 line-clamp-3">{event.fields.descricao}</p>
+                            <div className="mt-2 text-gray-600 line-clamp-3">
+                              {documentToReactComponents(event.fields.descricao, options)}
+                            </div>
                           </div>
                           <div className="mt-4 flex flex-wrap gap-4">
                             <Button asChild variant="outline" size="sm" className="text-red-600">
@@ -137,7 +149,9 @@ export default async function AgendaPage() {
                               {event.fields.title}
                             </div>
                             <h3 className="font-heading text-xl font-bold">{event.fields.title}</h3>
-                            <p className="mt-2 text-gray-600 line-clamp-3">{event.fields.descricao}</p>
+                            <div className="mt-2 text-gray-600 line-clamp-3">
+                              {documentToReactComponents(event.fields.descricao, options)}
+                            </div>
                           </div>
                           <div className="mt-4">
                             <Button asChild variant="outline" size="sm">
