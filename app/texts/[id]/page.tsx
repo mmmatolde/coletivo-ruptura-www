@@ -1,5 +1,4 @@
 import { getTexts } from '@/lib/contentful'
-import { staticTexts } from '../static-content'
 import Image from 'next/image'
 import { Calendar, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -67,9 +66,6 @@ export default async function TextPage({
   const { texts: contentfulTexts } = await getTexts(1000, 0)
   const contentfulText = contentfulTexts.find(text => text.sys.id === params.id)
   
-  // Buscar texto estático
-  const staticText = staticTexts.find(text => text.id === params.id)
-
   // Combinar resultados
   const text = contentfulText 
     ? {
@@ -83,7 +79,7 @@ export default async function TextPage({
         autoria: (contentfulText.fields as ContentfulText['fields']).autoria,
         date: (contentfulText.fields as ContentfulText['fields']).date || contentfulText.sys.createdAt
       }
-    : staticText
+    : null
 
   if (!text) {
     return (

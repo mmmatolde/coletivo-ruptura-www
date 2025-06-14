@@ -1,5 +1,4 @@
 import { getTexts } from '@/lib/contentful'
-import { staticTexts } from './static-content'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, User } from "lucide-react"
@@ -93,7 +92,6 @@ export default async function TextsPage({
         date: fields.date || text.sys.createdAt
       }
     }),
-    ...staticTexts
   ]
 
   // Aplicar filtros
