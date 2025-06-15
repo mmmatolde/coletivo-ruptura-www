@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Calendar, FileText, MessageSquare } from "lucide-react"
+import { ArrowRight, Calendar, FileText, MessageSquare, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { getArticles, getRecentPublications } from "@/lib/contentful"
@@ -130,23 +130,29 @@ export default async function HomePage() {
                       {publication.fields.isArticle ? 'Artigo' : 'Tribuna Pública'}
                     </span>
                   </div>
-                  <div className="flex flex-col flex-grow">
-                    <CardHeader>
-                      <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{publication.fields.title}</CardTitle>
-                      <CardDescription>
+                  <CardContent className="flex-grow p-4">
+                    <h3 className="font-heading text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-red-600 transition-colors">
+                      {publication.fields.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-3">
+                      {publication.fields.description || publication.fields.excerpt}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="p-4 pt-0">
+                    <div className="flex items-center justify-between w-full text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <User className="h-4 w-4" /> {publication.fields.autoria}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
                         {new Date(publication.fields.date || publication.sys.createdAt).toLocaleDateString('pt-PT', {
                           day: 'numeric',
                           month: 'long',
                           year: 'numeric'
                         })}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="mt-auto">
-                      <p className="text-gray-600">
-                        Por {publication.fields.autoria}
-                      </p>
-                    </CardContent>
-                  </div>
+                      </div>
+                    </div>
+                  </CardFooter>
                 </Card>
               </Link>
             ))}

@@ -277,21 +277,82 @@ export async function getTribuneById(id: string): Promise<BlogFields | null> {
   }
 }
 
-// Função para buscar as publicações mais recentes (artigos e tribunas)
-export async function getRecentPublications(limit = 6, skip = 0): Promise<QueryResponse> {
+// Função para buscar publicações recentes (artigos e tribunas)
+export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryResponse> {
   try {
-    const response = await client.getEntries({
-      content_type: 'blog',
-      order: ['-sys.createdAt'],
-      limit,
-      skip,
+    // Buscar artigos e tribunas separadamente
+    const [articlesResponse, tribunesResponse] = await Promise.all([
+      client.getEntries({
+        content_type: 'blog',
+        'fields.isArticle': true,
+        order: ['-sys.createdAt'],
+        limit: limit,
+        skip: 0,
+      }),
+      client.getEntries({
+        content_type: 'blog',
+        'fields.isArticle': false,
+        order: ['-sys.createdAt'],
+        limit: limit,
+        skip: 0,
+      })
+    ])
+
+    console.log('Artigos encontrados:', articlesResponse.items.length)
+    console.log('Tribunas encontradas:', tribunesResponse.items.length)
+
+    // Combinar e ordenar por data
+    const allItems = [
+      ...articlesResponse.items,
+      ...tribunesResponse.items
+    ].sort((a, b) => {
+      const dateA = new Date(a.sys.createdAt).getTime()
+      const dateB = new Date(b.sys.createdAt).getTime()
+      return dateB - dateA
     })
 
+    // Garantir pelo menos 1 de cada tipo
+    const selectedItems = []
+    
+    // Adicionar o artigo mais recente se existir
+    const latestArticle = articlesResponse.items[0]
+    if (latestArticle) {
+      selectedItems.push(latestArticle)
+      console.log('Artigo selecionado:', latestArticle.fields.title)
+    }
+    
+    // Adicionar a tribuna mais recente se existir
+    const latestTribune = tribunesResponse.items[0]
+    if (latestTribune) {
+      selectedItems.push(latestTribune)
+      console.log('Tribuna selecionada:', latestTribune.fields.title)
+    }
+
+    // Preencher o resto com os itens mais recentes, independente do tipo
+    const remainingItems = allItems
+      .filter(item => !selectedItems.includes(item))
+      .slice(0, limit - selectedItems.length)
+
+    console.log('Itens restantes selecionados:', remainingItems.length)
+
+    // Combinar e ordenar por data
+    const finalItems = [...selectedItems, ...remainingItems].sort((a, b) => {
+      const dateA = new Date(a.sys.createdAt).getTime()
+      const dateB = new Date(b.sys.createdAt).getTime()
+      return dateB - dateA
+    })
+
+    console.log('Itens finais:', finalItems.map(item => ({
+      title: item.fields.title,
+      type: (item.fields as BlogFields['fields']).isArticle ? 'Artigo' : 'Tribuna',
+      date: item.sys.createdAt
+    })))
+
     return {
-      articles: response.items as unknown as BlogFields[],
-      total: response.total,
-      skip: response.skip,
-      limit: response.limit,
+      articles: finalItems as unknown as BlogFields[],
+      total: finalItems.length,
+      skip: 0,
+      limit,
     }
   } catch (error) {
     console.error('Erro ao buscar publicações recentes:', error)
