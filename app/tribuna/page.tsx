@@ -1,3 +1,5 @@
+'use client'
+
 import { getTribunes } from '@/lib/contentful'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -5,21 +7,53 @@ import { ArrowRight, Calendar, MessageSquare, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export const revalidate = 3600 // revalidar a cada hora
-
-export default async function TribunaPage({
-  searchParams,
-}: {
-  searchParams: { page?: string }
-}) {
-  const params = await searchParams
-  const page = Number(params?.page) || 1
+export default function TribunaPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const page = Number(searchParams.get('page')) || 1
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+  const [allTribunes, setAllTribunes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const limit = 6
-  const skip = (page - 1) * limit
 
-  const { articles: tribunes, total } = await getTribunes(limit, skip)
-  const totalPages = Math.ceil(total / limit)
+  useEffect(() => {
+    const fetchAllTribunes = async () => {
+      setIsLoading(true)
+      // Buscar todos os artigos (usando um limite alto)
+      const { articles } = await getTribunes(1000, 0)
+      setAllTribunes(articles)
+      setIsLoading(false)
+    }
+    fetchAllTribunes()
+  }, [])
+
+  const filteredTribunes = searchTerm
+    ? allTribunes.filter(
+        (tribune) =>
+          tribune.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          tribune.fields.autoria.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allTribunes
+
+  // Paginação do lado do cliente
+  const startIndex = (page - 1) * limit
+  const paginatedTribunes = filteredTribunes.slice(startIndex, startIndex + limit)
+  const totalPages = Math.ceil(filteredTribunes.length / limit)
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value)
+    const params = new URLSearchParams(searchParams.toString())
+    if (value) {
+      params.set('search', value)
+    } else {
+      params.delete('search')
+    }
+    params.set('page', '1')
+    router.push(`/tribuna?${params.toString()}`)
+  }
 
   return (
     <div className="flex flex-col">
@@ -40,7 +74,13 @@ export default async function TribunaPage({
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="w-full md:w-1/3">
               <div className="relative">
-                <Input type="search" placeholder="Pesquisar na tribuna..." className="w-full" />
+                <Input 
+                  type="search" 
+                  placeholder="Pesquisar por título ou autor..." 
+                  className="w-full"
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -67,73 +107,79 @@ export default async function TribunaPage({
       {/* Tribune Posts */}
       <section className="py-16">
         <div className="container">
-          <div className="grid gap-8 md:grid-cols-2">
-            {tribunes.map((tribune) => (
-              <Link
-                key={tribune.sys.id}
-                href={`/tribuna/${tribune.sys.id}`}
-                className="block transition-colors hover:text-red-600"
-              >
-                <Card className="group h-full overflow-hidden transition-all hover:shadow-md">
-                  <div className="flex flex-col md:flex-row h-full">
-                    <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
-                      <Image
-                        src={`https:${tribune.fields.capa.fields.file.url}`}
-                        alt={tribune.fields.title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-between p-6">
-                      <div>
-                        <CardHeader className="p-0 pb-3">
-                          <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{tribune.fields.title}</CardTitle>
-                          <CardDescription className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" /> 
-                            {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric'
-                            })}
-                          </CardDescription>
-                        </CardHeader>
-                      </div>
-                      <CardFooter className="p-0 pt-4">
-                        <div className="flex items-center justify-between w-full text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" /> {tribune.fields.autoria}
-                          </div>
-                          <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
-                            <MessageSquare className="h-4 w-4" /> 0
-                          </div>
-                        </div>
-                      </CardFooter>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-12 flex justify-center">
-              <div className="flex items-center space-x-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+          {isLoading ? (
+            <div className="text-center py-8">Carregando artigos...</div>
+          ) : (
+            <>
+              <div className="grid gap-8 md:grid-cols-2">
+                {paginatedTribunes.map((tribune) => (
                   <Link
-                    key={pageNum}
-                    href={`/tribuna?page=${pageNum}`}
-                    className={`px-4 py-2 rounded ${
-                      pageNum === page
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-200 dark:bg-zinc-700 hover:bg-red-100 dark:hover:bg-red-900'
-                    }`}
+                    key={tribune.sys.id}
+                    href={`/tribuna/${tribune.sys.id}`}
+                    className="block transition-colors hover:text-red-600"
                   >
-                    {pageNum}
+                    <Card className="group h-full overflow-hidden transition-all hover:shadow-md">
+                      <div className="flex flex-col md:flex-row h-full">
+                        <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
+                          <Image
+                            src={`https:${tribune.fields.capa.fields.file.url}`}
+                            alt={tribune.fields.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="flex flex-1 flex-col justify-between p-6">
+                          <div>
+                            <CardHeader className="p-0 pb-3">
+                              <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{tribune.fields.title}</CardTitle>
+                              <CardDescription className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" /> 
+                                {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
+                                  day: 'numeric',
+                                  month: 'long',
+                                  year: 'numeric'
+                                })}
+                              </CardDescription>
+                            </CardHeader>
+                          </div>
+                          <CardFooter className="p-0 pt-4">
+                            <div className="flex items-center justify-between w-full text-sm text-gray-500">
+                              <div className="flex items-center gap-1">
+                                <User className="h-4 w-4" /> {tribune.fields.autoria}
+                              </div>
+                              <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
+                                <MessageSquare className="h-4 w-4" /> 0
+                              </div>
+                            </div>
+                          </CardFooter>
+                        </div>
+                      </div>
+                    </Card>
                   </Link>
                 ))}
               </div>
-            </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <div className="flex items-center space-x-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <Link
+                        key={pageNum}
+                        href={`/tribuna?page=${pageNum}${searchTerm ? `&search=${searchTerm}` : ''}`}
+                        className={`px-4 py-2 rounded ${
+                          pageNum === page
+                            ? 'bg-red-600 text-white'
+                            : 'bg-gray-200 dark:bg-zinc-700 hover:bg-red-100 dark:hover:bg-red-900'
+                        }`}
+                      >
+                        {pageNum}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
