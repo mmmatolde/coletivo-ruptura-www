@@ -113,42 +113,42 @@ export default async function HomePage() {
 
           <div className="grid gap-8 md:grid-cols-3">
             {publications.map((publication) => (
-              <Card key={publication.sys.id} className="group overflow-hidden transition-all hover:shadow-md">
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={`https:${publication.fields.capa.fields.file.url}`}
-                    alt={publication.fields.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <span className="absolute top-2 right-2 rounded-md bg-zinc-900/60 px-2 py-1 text-xs font-medium text-white z-10">
-                    {publication.fields.isArticle ? 'Artigo' : 'Tribuna Pública'}
-                  </span>
-                </div>
-                <CardHeader>
-                  <CardTitle className="font-heading text-xl">{publication.fields.title}</CardTitle>
-                  <CardDescription>
-                    {new Date(publication.fields.date || publication.sys.createdAt).toLocaleDateString('pt-PT', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric'
-                    })}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Por {publication.fields.autoria}
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Link
-                    href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna/${publication.sys.id}`}
-                    className="flex items-center text-sm font-medium text-red-600 hover:underline"
-                  >
-                    Ler mais <ArrowRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </CardFooter>
-              </Card>
+              <Link
+                key={publication.sys.id}
+                href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna/${publication.sys.id}`}
+                className="block h-full"
+              >
+                <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col">
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={`https:${publication.fields.capa.fields.file.url}`}
+                      alt={publication.fields.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <span className="absolute top-2 right-2 rounded-md bg-zinc-900/60 px-2 py-1 text-xs font-medium text-white z-10">
+                      {publication.fields.isArticle ? 'Artigo' : 'Tribuna Pública'}
+                    </span>
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <CardHeader>
+                      <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors">{publication.fields.title}</CardTitle>
+                      <CardDescription>
+                        {new Date(publication.fields.date || publication.sys.createdAt).toLocaleDateString('pt-PT', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="mt-auto">
+                      <p className="text-gray-600">
+                        Por {publication.fields.autoria}
+                      </p>
+                    </CardContent>
+                  </div>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
