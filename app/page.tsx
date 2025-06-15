@@ -72,15 +72,7 @@ export default async function HomePage() {
         <div className="container">
           <div className="grid gap-8 md:grid-cols-2 items-center">
             <div>
-              <h2 className="font-heading text-3xl font-bold text-gray-900">Junta-te ao Ruptura</h2>
-              <p className="mt-4 text-lg text-gray-600">
-                O Coletivo Ruptura é formado por centenas de pessoas comprometidas com a transformação social, unidas
-                para construir um futuro melhor.
-              </p>
-              <p className="mt-4 text-lg text-gray-600">
-                Ao juntar-te, podes envolver-te com o teu grupo local, participar em campanhas sobre temas que te
-                interessam e garantir que a tua voz é ouvida.
-              </p>
+              <h2 className="font-heading text-3xl font-bold text-gray-900">Junta-te à luta pela reconstrução do Partido Comunista!</h2>
               <div className="mt-8">
                 <Button asChild className="bg-red-600 text-white hover:bg-red-700">
                   <Link href="/join">
@@ -91,10 +83,10 @@ export default async function HomePage() {
             </div>
             <div className="relative h-80 overflow-hidden rounded-lg md:h-96">
               <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="Membros do coletivo"
+                src="/images/logo.png"
+                alt="Logo do Coletivo Ruptura"
                 fill
-                className="object-cover"
+                className="object-contain p-8"
               />
             </div>
           </div>
