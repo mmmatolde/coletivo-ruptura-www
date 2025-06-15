@@ -1,5 +1,7 @@
 import * as React from "react"
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
+import { Button } from "./button"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
@@ -105,6 +107,113 @@ const PaginationEllipsis = ({
   </span>
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"
+
+interface PaginationWithEllipsisProps {
+  currentPage: number
+  totalPages: number
+  baseUrl: string
+  searchParams?: Record<string, string>
+}
+
+export function PaginationWithEllipsis({ currentPage, totalPages, baseUrl, searchParams = {} }: PaginationWithEllipsisProps) {
+  // Helper function to generate a range of numbers
+  const range = (start: number, end: number) => {
+    const length = end - start + 1;
+    return Array.from({ length }, (_, i) => start + i);
+  };
+
+  const getPageNumbers = () => {
+    const totalPageCount = totalPages;
+    const currentPageNumber = currentPage;
+    const siblingCount = 1; // how many pages to show before and after the current page
+
+    const totalPageNumbersToShow = siblingCount * 2 + 3; // e.g., 1 ... 4 5 6 ... 10 => siblingCount * 2 + 1 (current) + 2 (first/last)
+    const lastPageIndex = totalPageCount;
+
+    // Case 1: If the number of total pages is less than or equal to the page numbers we want to show in total,
+    // we are not going to show ellipses and just show all available page numbers.
+    if (totalPageCount <= totalPageNumbersToShow) {
+      return range(1, totalPageCount);
+    }
+
+    // Calculate left and right sibling index and whether to show left/right ellipsis
+    const leftSiblingIndex = Math.max(1, currentPageNumber - siblingCount);
+    const rightSiblingIndex = Math.min(totalPageCount, currentPageNumber + siblingCount);
+
+    const shouldShowLeftEllipsis = leftSiblingIndex > (siblingCount + 1);
+    const shouldShowRightEllipsis = rightSiblingIndex < (totalPageCount - siblingCount);
+
+    // No left ellipsis, only right ellipsis
+    if (!shouldShowLeftEllipsis && shouldShowRightEllipsis) {
+      let leftRange = range(1, siblingCount * 2 + 1);
+      return [...leftRange, '...', lastPageIndex];
+    }
+
+    // Only left ellipsis, no right ellipsis
+    if (shouldShowLeftEllipsis && !shouldShowRightEllipsis) {
+      let rightRange = range(totalPageCount - (siblingCount * 2), totalPageCount);
+      return [1, '...', ...rightRange];
+    }
+
+    // Both left and right ellipsis
+    if (shouldShowLeftEllipsis && shouldShowRightEllipsis) {
+      let middleRange = range(leftSiblingIndex, rightSiblingIndex);
+      return [1, '...', ...middleRange, '...', lastPageIndex];
+    }
+
+    // Default case (should be caught by the first if or other cases)
+    return range(1, totalPageCount);
+  };
+
+  const createPageUrl = (page: number) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('page', page.toString())
+    return `${baseUrl}?${params.toString()}`
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-8">
+      <Button
+        variant="outline"
+        size="icon"
+        asChild
+        disabled={currentPage === 1}
+      >
+        <Link href={createPageUrl(currentPage - 1)}>
+          <ChevronLeft className="h-4 w-4" />
+        </Link>
+      </Button>
+
+      {getPageNumbers().map((page, index) => (
+        page === '...' ? (
+          <span key={`ellipsis-${index}`} className="px-2 text-gray-500">•••</span>
+        ) : (
+          <Button
+            key={page}
+            variant={currentPage === page ? "default" : "outline"}
+            size="icon"
+            asChild
+          >
+            <Link href={createPageUrl(page as number)}>
+              {page}
+            </Link>
+          </Button>
+        )
+      ))}
+
+      <Button
+        variant="outline"
+        size="icon"
+        asChild
+        disabled={currentPage === totalPages}
+      >
+        <Link href={createPageUrl(currentPage + 1)}>
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      </Button>
+    </div>
+  )
+}
 
 export {
   Pagination,

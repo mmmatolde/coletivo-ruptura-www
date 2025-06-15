@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useState } from "react"
+import { PaginationWithEllipsis } from "@/components/ui/pagination"
 
 export default function MaterialsPage() {
   const [currentPage, setCurrentPage] = useState(1)
@@ -191,37 +192,11 @@ export default function MaterialsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-12 flex justify-center">
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Anterior
-                    </Button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <Button
-                        key={pageNum}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
-                      >
-                        {pageNum}
-                      </Button>
-                    ))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Seguinte
-                    </Button>
-                  </div>
-                </div>
+                <PaginationWithEllipsis
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  baseUrl="/materials"
+                />
               )}
             </TabsContent>
 
@@ -272,37 +247,11 @@ export default function MaterialsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-12 flex justify-center">
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Anterior
-                    </Button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <Button
-                        key={pageNum}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
-                      >
-                        {pageNum}
-                      </Button>
-                    ))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Seguinte
-                    </Button>
-                  </div>
-                </div>
+                <PaginationWithEllipsis
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  baseUrl="/materials"
+                />
               )}
             </TabsContent>
 
@@ -353,37 +302,11 @@ export default function MaterialsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-12 flex justify-center">
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Anterior
-                    </Button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                      <Button
-                        key={pageNum}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={pageNum === currentPage ? "bg-red-50 text-red-600" : ""}
-                      >
-                        {pageNum}
-                      </Button>
-                    ))}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Seguinte
-                    </Button>
-                  </div>
-                </div>
+                <PaginationWithEllipsis
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  baseUrl="/materials"
+                />
               )}
             </TabsContent>
           </Tabs>

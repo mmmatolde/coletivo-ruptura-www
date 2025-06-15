@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { PaginationWithEllipsis } from "@/components/ui/pagination"
 
 const CATEGORIAS = [
   'Internacional',
@@ -163,21 +164,15 @@ export default function ArtigosPage() {
 
             {/* Paginação */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-8">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <Link
-                    key={pageNum}
-                    href={`/artigos?page=${pageNum}${searchTerm ? `&search=${searchTerm}` : ''}${selectedCategory !== 'all' ? `&category=${selectedCategory}` : ''}`}
-                    className={`px-4 py-2 rounded ${
-                      pageNum === page
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-200 dark:bg-zinc-700 hover:bg-red-100 dark:hover:bg-red-900'
-                    }`}
-                  >
-                    {pageNum}
-                  </Link>
-                ))}
-              </div>
+              <PaginationWithEllipsis
+                currentPage={page}
+                totalPages={totalPages}
+                baseUrl="/artigos"
+                searchParams={{
+                  ...(searchTerm && { search: searchTerm }),
+                  ...(selectedCategory !== 'all' && { category: selectedCategory })
+                }}
+              />
             )}
           </>
         )}
