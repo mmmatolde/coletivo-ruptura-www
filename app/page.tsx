@@ -107,7 +107,7 @@ export default async function HomePage() {
           <div className="mb-12 text-center">
             <h2 className="font-heading text-3xl font-bold text-gray-900">Destaques</h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-              Últimas atividades, publicações e eventos do coletivo
+              Últimas publicações do Ruptura
             </p>
           </div>
 
