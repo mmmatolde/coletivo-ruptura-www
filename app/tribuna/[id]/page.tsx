@@ -3,7 +3,14 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS, INLINES } from '@contentful/rich-text-types'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { Calendar, User } from 'lucide-react'
+import { Calendar, User, Tag } from 'lucide-react'
+
+const CATEGORIAS = [
+  'Internacional',
+  'Movimento Estudantil',
+  'LGBTQIA+',
+  'Feminismo'
+] as const
 
 export const revalidate = 3600 // revalidar a cada hora
 
@@ -110,6 +117,18 @@ export default async function TribunaPage({ params }: { params: { id: string } }
             <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl mb-8 text-gray-900 dark:text-white">
               {tribune.fields.title}
             </h1>
+            {tribune.fields.categoria && tribune.fields.categoria.length > 0 && (
+              <div className="flex items-center gap-2 mb-8">
+                {tribune.fields.categoria.map((cat: string) => (
+                  CATEGORIAS.includes(cat) && (
+                    <span key={cat} className="flex items-center gap-1 text-sm bg-red-50 text-red-600 px-3 py-1 rounded-full">
+                      <Tag className="h-4 w-4" />
+                      {cat}
+                    </span>
+                  )
+                ))}
+              </div>
+            )}
             {/* Conteúdo */}
             <div className="prose dark:prose-invert max-w-none">
               {documentToReactComponents(tribune.fields.texto, options)}

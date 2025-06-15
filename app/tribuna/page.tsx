@@ -3,42 +3,53 @@
 import { getTribunes } from '@/lib/contentful'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Calendar, MessageSquare, User } from "lucide-react"
+import { ArrowRight, Calendar, MessageSquare, User, Tag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+
+const CATEGORIAS = [
+  'Internacional',
+  'Movimento Estudantil',
+  'LGBTQIA+',
+  'Feminismo'
+] as const
 
 export default function TribunaPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const page = Number(searchParams.get('page')) || 1
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all')
   const [allTribunes, setAllTribunes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const limit = 6
 
   useEffect(() => {
-    const fetchAllTribunes = async () => {
+    const fetchData = async () => {
       setIsLoading(true)
-      // Buscar todos os artigos (usando um limite alto)
       const { articles } = await getTribunes(1000, 0)
       setAllTribunes(articles)
       setIsLoading(false)
     }
-    fetchAllTribunes()
+    fetchData()
   }, [])
 
-  const filteredTribunes = searchTerm
-    ? allTribunes.filter(
-        (tribune) =>
-          tribune.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          tribune.fields.autoria.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : allTribunes
+  const filteredTribunes = allTribunes.filter((tribune) => {
+    const matchesSearch = searchTerm
+      ? tribune.fields.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tribune.fields.autoria.toLowerCase().includes(searchTerm.toLowerCase())
+      : true
 
-  // Paginação do lado do cliente
+    const matchesCategory = selectedCategory === 'all' || 
+      (tribune.fields.categoria && tribune.fields.categoria.includes(selectedCategory))
+
+    return matchesSearch && matchesCategory
+  })
+
   const startIndex = (page - 1) * limit
   const paginatedTribunes = filteredTribunes.slice(startIndex, startIndex + limit)
   const totalPages = Math.ceil(filteredTribunes.length / limit)
@@ -50,6 +61,18 @@ export default function TribunaPage() {
       params.set('search', value)
     } else {
       params.delete('search')
+    }
+    params.set('page', '1')
+    router.push(`/tribuna?${params.toString()}`)
+  }
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value)
+    const params = new URLSearchParams(searchParams.toString())
+    if (value !== 'all') {
+      params.set('category', value)
+    } else {
+      params.delete('category')
     }
     params.set('page', '1')
     router.push(`/tribuna?${params.toString()}`)
@@ -83,22 +106,20 @@ export default function TribunaPage() {
                 />
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" className="border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
-                Todos
-              </Button>
-              <Button variant="outline" size="sm">
-                Política
-              </Button>
-              <Button variant="outline" size="sm">
-                Economia
-              </Button>
-              <Button variant="outline" size="sm">
-                Cultura
-              </Button>
-              <Button variant="outline" size="sm">
-                Internacional
-              </Button>
+            <div className="w-full md:w-1/5">
+              <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Categorias" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {CATEGORIAS.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
@@ -130,17 +151,19 @@ export default function TribunaPage() {
                         </div>
                         <div className="flex flex-1 flex-col justify-between p-6">
                           <div>
-                            <CardHeader className="p-0 pb-3">
-                              <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{tribune.fields.title}</CardTitle>
-                              <CardDescription className="flex items-center gap-2">
+                            <CardHeader className="p-0 pb-2">
+                              <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Calendar className="h-4 w-4" /> 
                                 {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
                                   day: 'numeric',
                                   month: 'long',
                                   year: 'numeric'
                                 })}
-                              </CardDescription>
+                              </div>
                             </CardHeader>
+                            <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2 mt-2">
+                              {tribune.fields.title}
+                            </CardTitle>
                           </div>
                           <CardFooter className="p-0 pt-4">
                             <div className="flex items-center justify-between w-full text-sm text-gray-500">

@@ -352,4 +352,28 @@ export async function getEventById(id: string): Promise<EventFields | null> {
     console.error('Erro ao buscar evento:', error)
     return null
   }
+}
+
+// Função para buscar categorias das tribunas
+export async function getTribuneCategories(): Promise<string[]> {
+  try {
+    const response = await client.getEntries({
+      content_type: 'blog',
+      'fields.isArticle': false,
+      select: 'fields.categoria',
+    })
+
+    // Extrair categorias únicas do array de categorias
+    const categories = new Set<string>()
+    response.items.forEach((item: any) => {
+      if (item.fields.categoria && Array.isArray(item.fields.categoria)) {
+        item.fields.categoria.forEach((cat: string) => categories.add(cat))
+      }
+    })
+
+    return Array.from(categories).sort()
+  } catch (error) {
+    console.error('Erro ao buscar categorias das tribunas:', error)
+    return []
+  }
 } 
