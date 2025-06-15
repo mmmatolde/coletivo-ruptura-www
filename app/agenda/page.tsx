@@ -223,61 +223,70 @@ export default function AgendaPage() {
             {/* Upcoming Events Tab */}
             <TabsContent value="upcoming">
               <div className="space-y-6">
-                {upcomingEvents.map((event) => {
-                  console.log('URL da capa do evento (upcoming):', event.fields.capa?.fields?.file?.url);
-                  return (
-                  <Card key={event.sys.id} className="overflow-hidden">
-                    <div className="flex flex-col md:flex-row">
-                      {event.fields.capa && event.fields.capa.fields.file && (
-                        <div className="relative w-full h-48 md:w-1/3 flex-shrink-0 overflow-hidden">
-                          <Image
-                            src={`https:${event.fields.capa.fields.file.url}`}
-                            alt={event.fields.title}
-                            fill
-                            className="object-cover object-top"
-                          />
-                        </div>
-                      )}
-                      <div className="flex flex-col flex-grow md:flex-row">
-                        <div className="flex w-full flex-col justify-between border-b p-6 md:w-2/3 md:border-b-0 md:border-r">
-                          <div>
-                            <div className="mb-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
-                              {event.fields.title}
+                {upcomingEvents.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600 text-lg">
+                      Não há eventos futuros agendados no momento.
+                    </p>
+                  </div>
+                ) : (
+                  upcomingEvents.map((event) => {
+                    console.log('URL da capa do evento (upcoming):', event.fields.capa?.fields?.file?.url);
+                    return (
+                      <Card key={event.sys.id} className="overflow-hidden">
+                        <div className="flex flex-col md:flex-row">
+                          {event.fields.capa && event.fields.capa.fields.file && (
+                            <div className="relative w-full h-48 md:w-1/3 flex-shrink-0 overflow-hidden">
+                              <Image
+                                src={`https:${event.fields.capa.fields.file.url}`}
+                                alt={event.fields.title}
+                                fill
+                                className="object-cover object-top"
+                              />
                             </div>
-                            <h3 className="font-heading text-xl font-bold">{event.fields.title}</h3>
-                            <div className="mt-2 text-gray-600 line-clamp-3">
-                              {documentToReactComponents(event.fields.descricao, options)}
+                          )}
+                          <div className="flex flex-col flex-grow md:flex-row">
+                            <div className="flex w-full flex-col justify-between border-b p-6 md:w-2/3 md:border-b-0 md:border-r">
+                              <div>
+                                <div className="mb-2 inline-block rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
+                                  {event.fields.title}
+                                </div>
+                                <h3 className="font-heading text-xl font-bold">{event.fields.title}</h3>
+                                <div className="mt-2 text-gray-600 line-clamp-3">
+                                  {documentToReactComponents(event.fields.descricao, options)}
+                                </div>
+                              </div>
+                              <div className="mt-4 flex flex-wrap gap-4">
+                                <Button asChild variant="outline" size="sm" className="text-red-600">
+                                  <Link href={`/agenda/${event.sys.id}`}>Ver detalhes</Link>
+                                </Button>
+                                <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
+                                  <Link href={`/agenda/${event.sys.id}#register`}>Inscrever-se</Link>
+                                </Button>
+                              </div>
+                            </div>
+                            <div className="flex w-full flex-col justify-center space-y-4 bg-gray-50 p-6 md:w-1/3">
+                              <div className="flex items-center">
+                                <Calendar className="mr-2 h-4 w-4 text-gray-500" />
+                                <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <Clock className="mr-2 h-4 w-4 text-gray-500" />
+                                <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <MapPin className="mr-2 h-4 w-4 text-gray-500 shrink-0" />
+                                <span className="text-sm text-gray-600">
+                                  {event.fields.morada || 'Localização não disponível'}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                          <div className="mt-4 flex flex-wrap gap-4">
-                            <Button asChild variant="outline" size="sm" className="text-red-600">
-                              <Link href={`/agenda/${event.sys.id}`}>Ver detalhes</Link>
-                            </Button>
-                            <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                              <Link href={`/agenda/${event.sys.id}#register`}>Inscrever-se</Link>
-                            </Button>
-                          </div>
                         </div>
-                        <div className="flex w-full flex-col justify-center space-y-4 bg-gray-50 p-6 md:w-1/3">
-                          <div className="flex items-center">
-                            <Calendar className="mr-2 h-4 w-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="mr-2 h-4 w-4 text-gray-500" />
-                            <span className="text-sm text-gray-600">{new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <MapPin className="mr-2 h-4 w-4 text-gray-500 shrink-0" />
-                            <span className="text-sm text-gray-600">
-                              {event.fields.morada || 'Localização não disponível'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                )})}
+                      </Card>
+                    )
+                  })
+                )}
               </div>
             </TabsContent>
 
