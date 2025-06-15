@@ -148,22 +148,22 @@ export default async function TextsPage({
                 href={`/texts/${text.id}`}
                 className="block transition-colors hover:text-red-600"
               >
-                <Card className="group overflow-hidden transition-all hover:shadow-md h-[300px]">
+                <Card className="group overflow-hidden transition-all hover:shadow-md h-[180px]">
                   <div className="flex flex-col md:flex-row h-full">
-                    <div className="relative h-48 w-full md:h-full md:w-1/3">
+                    <div className="relative h-[180px] w-full md:h-full md:w-[180px]">
                       <Image
                         src={text.capa.url}
                         alt={text.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 768px) 100vw, 180px"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <div className="flex flex-1 flex-col p-6">
-                      <CardHeader className="p-0 pb-3">
-                        <CardTitle className="font-heading text-xl group-hover:text-red-600 transition-colors line-clamp-2">{text.title}</CardTitle>
-                        <CardDescription className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" /> 
+                    <div className="flex flex-1 flex-col p-4">
+                      <CardHeader className="p-0 pb-2">
+                        <CardTitle className="font-heading text-lg group-hover:text-red-600 transition-colors line-clamp-2">{text.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-2 text-sm">
+                          <Calendar className="h-3 w-3" /> 
                           {new Date(text.date).toLocaleDateString('pt-PT', {
                             day: 'numeric',
                             month: 'long',
@@ -171,19 +171,10 @@ export default async function TextsPage({
                           })}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="p-0 flex-grow">
-                        <div className="prose dark:prose-invert max-w-none text-sm text-gray-600 line-clamp-3">
-                          {typeof text.texto === 'object' && text.texto && 'nodeType' in text.texto
-                            ? documentToReactComponents(text.texto as Document, options)
-                            : typeof text.texto === 'string'
-                              ? <div dangerouslySetInnerHTML={{ __html: text.texto }} />
-                              : 'Texto disponível'}
-                        </div>
-                      </CardContent>
-                      <CardFooter className="p-0 pt-4 mt-auto">
-                        <div className="flex items-center justify-between w-full text-sm text-gray-500">
+                      <CardFooter className="p-0 pt-2 mt-auto">
+                        <div className="flex items-center justify-between w-full text-xs text-gray-500">
                           <div className="flex items-center gap-1">
-                            <User className="h-4 w-4" /> {text.autoria}
+                            <User className="h-3 w-3" /> {text.autoria}
                           </div>
                           <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
                             {text.originalOuTraducao ? 'Tradução' : 'Texto'}
