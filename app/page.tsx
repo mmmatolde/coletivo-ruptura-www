@@ -162,13 +162,12 @@ export default async function HomePage() {
 
       {/* Donation Section */}
       <section className="relative bg-gray-800 py-16 text-white">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-20"></div>
+        <div className="absolute inset-0 bg-[url('/images/bannerLGBT.jpg')] bg-cover bg-[center_80%] opacity-90 mix-blend-overlay"></div>
         <div className="container relative z-10">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-heading text-3xl font-bold">
               Ajuda a construir o fundo de campanha do Coletivo Ruptura
             </h2>
-            <p className="mt-4 text-lg">Contribui agora e juntos podemos mudar Portugal</p>
             <div className="mt-8">
               <Button asChild size="lg" className="bg-red-600 text-white hover:bg-red-700">
                 <Link href="/donate">

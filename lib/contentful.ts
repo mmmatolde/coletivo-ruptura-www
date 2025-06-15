@@ -17,6 +17,8 @@ export interface BlogFields {
     texto: Document
     autoria: string
     date: string
+    description?: string
+    excerpt?: string
   }
   sys: {
     id: string
