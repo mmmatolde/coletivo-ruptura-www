@@ -83,8 +83,23 @@ export default async function TribunaPage({ params }: { params: { id: string } }
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50"></div>
         </div>
-        <div className="container absolute bottom-0 left-1/2 -translate-x-1/2 text-center z-10">
-          <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl mb-8">{tribune.fields.title}</h1>
+        <div className="container absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+          <div className="flex items-center gap-4 text-lg text-white mb-8">
+            <div className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              <span>{tribune.fields.autoria}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              <span>
+                {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -92,22 +107,9 @@ export default async function TribunaPage({ params }: { params: { id: string } }
       <section className="py-16">
         <div className="container">
           <article className="mx-auto max-w-4xl">
-            <div className="flex items-center gap-4 text-lg text-gray-600 dark:text-gray-300 mb-8">
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                <span>{tribune.fields.autoria}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <span>
-                  {new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
-                </span>
-              </div>
-            </div>
+            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl mb-8 text-gray-900 dark:text-white">
+              {tribune.fields.title}
+            </h1>
             {/* Conteúdo */}
             <div className="prose dark:prose-invert max-w-none">
               {documentToReactComponents(tribune.fields.texto, options)}
