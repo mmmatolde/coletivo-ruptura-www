@@ -147,7 +147,7 @@ export default async function HomePage() {
                       {publication.fields.isArticle
                         ? 'Artigo'
                         : publication.fields.isText
-                          ? 'Texto/Tradução'
+                          ? (publication.fields.originalOuTraducao ? 'Tradução' : 'Texto')
                           : 'Tribuna Pública'}
                     </span>
                   </div>

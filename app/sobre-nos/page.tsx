@@ -199,7 +199,7 @@ export default function AboutPage() {
               </p>
               <div className="mt-6">
                 <Button asChild className="bg-red-600 text-white hover:bg-red-700">
-                  <Link href="/join">Junta-te a Nós</Link>
+                  <Link href="/contact">Junta-te a Nós</Link>
                 </Button>
               </div>
             </div>
