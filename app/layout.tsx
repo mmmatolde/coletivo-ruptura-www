@@ -16,9 +16,24 @@ const fontSans = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: "Colectivo Ruptura",
-  description: "Colectivo político para a mudança social",
-  generator: 'v0.dev'
+  title: "Coletivo Ruptura",
+  description: "Coletivo político para a mudança social",
+  generator: 'v0.dev',
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
+  openGraph: {
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Logo do Coletivo Ruptura',
+      },
+    ],
+  },
 }
 
 export default function RootLayout({

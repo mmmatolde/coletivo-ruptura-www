@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.0.1",
-    "@contentful/rich-text-types": "^16.5.0",
+    "@contentful/rich-text-types": "^17.0.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -44,7 +44,6 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "contentful": "^10.6.20",
-   
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
@@ -68,6 +67,7 @@
     "@types/node": "^22.15.31",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-icons": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
     "eslint": "^9.29.0",

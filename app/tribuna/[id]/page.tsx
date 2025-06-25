@@ -76,6 +76,8 @@ export default async function TribunaPage({ params }: { params: { id: string } }
     notFound()
   }
 
+  const textContent: Document = tribune.fields.texto;
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}

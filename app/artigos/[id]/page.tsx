@@ -3,6 +3,7 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS } from '@contentful/rich-text-types'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 3600 // revalidar a cada hora
 
@@ -62,6 +63,11 @@ export default async function ArtigoPage({ params }: { params: { id: string } })
 
         {/* Título */}
         <h1 className="text-4xl font-bold mb-4">{article.fields.title}</h1>
+        <ShareButton
+          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/artigos/${article.sys.id}`}
+          title={article.fields.title}
+          type="artigo"
+        />
 
         {/* Autor e Data */}
         <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-300 mb-8">
