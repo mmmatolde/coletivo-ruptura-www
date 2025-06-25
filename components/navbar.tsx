@@ -41,11 +41,8 @@ export default function Navbar() {
           ))}
 
           <div className="ml-4 flex items-center space-x-2">
-            <Button asChild variant="outline" size="sm" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/contact">Contacto</Link>
-            </Button>
             <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-              <Link href="/join">Junta-te</Link>
+              <Link href="/contact">Contacto</Link>
             </Button>
           </div>
         </nav>
@@ -82,14 +79,9 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <div className="mt-4 flex flex-col space-y-2 pt-4">
-                  <Button asChild variant="outline" className="w-full border-red-600 text-red-600 hover:bg-red-50">
+                  <Button asChild className="w-full bg-red-600 text-white hover:bg-red-700">
                     <Link href="/contact" onClick={() => setIsMenuOpen(false)}>
                       Contacto
-                    </Link>
-                  </Button>
-                  <Button asChild className="w-full bg-red-600 text-white hover:bg-red-700">
-                    <Link href="/join" onClick={() => setIsMenuOpen(false)}>
-                      Junta-te
                     </Link>
                   </Button>
                 </div>
