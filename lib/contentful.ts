@@ -103,7 +103,7 @@ export async function getArticles(limit = 6, skip = 0): Promise<QueryResponse> {
     const response = await client.getEntries({
       content_type: 'blog',
       'fields.isArticle': true,
-      order: ['-sys.createdAt'],
+      order: ['-fields.date'],
       limit,
       skip,
     })
@@ -155,7 +155,7 @@ export async function searchArticles(
       content_type: 'blog',
       'fields.isArticle': true,
       query: searchTerm,
-      order: ['-sys.createdAt'],
+      order: ['-fields.date'],
       limit,
       skip,
     })
@@ -203,7 +203,7 @@ export async function getArticlesByCategory(
     const response = await client.getEntries({
       content_type: 'blog',
       'fields.category': category,
-      order: ['-sys.createdAt'],
+      order: ['-fields.date'],
       limit,
       skip,
     })
@@ -253,7 +253,7 @@ export async function getTribunes(limit = 6, skip = 0): Promise<QueryResponse> {
     const response = await client.getEntries({
       content_type: 'blog',
       'fields.isArticle': false,
-      order: ['-sys.createdAt'],
+      order: ['-fields.date'],
       limit,
       skip,
     })
@@ -309,14 +309,14 @@ export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryR
       client.getEntries({
         content_type: 'blog',
         'fields.isArticle': true,
-        order: ['-sys.createdAt'],
+        order: ['-fields.date'],
         limit: limit,
         skip: 0,
       }),
       client.getEntries({
         content_type: 'blog',
         'fields.isArticle': false,
-        order: ['-sys.createdAt'],
+        order: ['-fields.date'],
         limit: limit,
         skip: 0,
       })
@@ -330,8 +330,8 @@ export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryR
       ...articlesResponse.items,
       ...tribunesResponse.items
     ].sort((a, b) => {
-      const dateA = new Date(a.sys.createdAt).getTime()
-      const dateB = new Date(b.sys.createdAt).getTime()
+      const dateA = new Date(a.fields.date).getTime()
+      const dateB = new Date(b.fields.date).getTime()
       return dateB - dateA
     })
 
@@ -361,15 +361,15 @@ export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryR
 
     // Combinar e ordenar por data
     const finalItems = [...selectedItems, ...remainingItems].sort((a, b) => {
-      const dateA = new Date(a.sys.createdAt).getTime()
-      const dateB = new Date(b.sys.createdAt).getTime()
+      const dateA = new Date(a.fields.date).getTime()
+      const dateB = new Date(b.fields.date).getTime()
       return dateB - dateA
     })
 
     console.log('Itens finais:', finalItems.map(item => ({
       title: item.fields.title,
       type: (item.fields as BlogFields['fields']).isArticle ? 'Artigo' : 'Tribuna',
-      date: item.sys.createdAt
+      date: item.fields.date
     })))
 
     return {
@@ -395,7 +395,7 @@ export async function getTexts(limit: number = 10, skip: number = 0) {
       content_type: 'textosETraducoes',
       limit,
       skip,
-      order: ['-sys.createdAt'],
+      order: ['-fields.date'],
     });
 
     const texts = response.items;
