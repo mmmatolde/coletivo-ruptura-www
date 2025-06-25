@@ -107,7 +107,7 @@ export default async function HomePage() {
             {publications.map((publication) => (
               <Link
                 key={publication.sys.id}
-                href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna/${publication.sys.id}`}
+                href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna-publica/${publication.sys.id}`}
                 className="block h-full"
               >
                 <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col">
@@ -150,6 +150,11 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+        <div className="mt-8 text-center">
+          <Button asChild className="bg-red-600 text-white hover:bg-red-700">
+            <Link href="/tribuna-publica">Ver Todas as Publicações</Link>
+          </Button>
+        </div>
       </section>
 
       {/* Donation Section */}
@@ -182,7 +187,7 @@ export default async function HomePage() {
               <h3 className="mt-4 font-heading text-xl font-bold">Textos e Traduções</h3>
               <p className="mt-2 text-gray-600">Acede à nossa biblioteca de textos políticos e traduções</p>
               <Link
-                href="/texts"
+                href="/textos-e-traducoes"
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Explorar textos

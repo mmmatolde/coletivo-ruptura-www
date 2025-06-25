@@ -64,7 +64,7 @@ export default function TribunaPage() {
       params.delete('search')
     }
     params.set('page', '1')
-    router.push(`/tribuna?${params.toString()}`)
+    router.push(`/tribuna-publica?${params.toString()}`)
   }
 
   const handleCategoryChange = (value: string) => {
@@ -76,7 +76,13 @@ export default function TribunaPage() {
       params.delete('category')
     }
     params.set('page', '1')
-    router.push(`/tribuna?${params.toString()}`)
+    router.push(`/tribuna-publica?${params.toString()}`)
+  }
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('page', page.toString())
+    router.push(`/tribuna-publica?${params.toString()}`)
   }
 
   return (
@@ -137,7 +143,7 @@ export default function TribunaPage() {
                 {paginatedTribunes.map((tribune) => (
                   <Link
                     key={tribune.sys.id}
-                    href={`/tribuna/${tribune.sys.id}`}
+                    href={`/tribuna-publica/${tribune.sys.id}`}
                     className="block transition-colors hover:text-red-600"
                   >
                     <Card className="group h-full overflow-hidden transition-all hover:shadow-md">
@@ -188,7 +194,8 @@ export default function TribunaPage() {
                 <PaginationWithEllipsis
                   currentPage={page}
                   totalPages={totalPages}
-                  baseUrl="/tribuna"
+                  onPageChange={handlePageChange}
+                  baseUrl="/tribuna-publica"
                   searchParams={{
                     ...(searchTerm && { search: searchTerm }),
                     ...(selectedCategory !== 'all' && { category: selectedCategory })

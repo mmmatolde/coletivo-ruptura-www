@@ -9,12 +9,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const routes = [
   { href: "/", label: "Início" },
-  { href: "/about", label: "Sobre Nós" },
+  { href: "/sobre-nos", label: "Sobre Nós" },
   { href: "/agenda", label: "Agenda" },
   { href: "/artigos", label: "Artigos" },
-  { href: "/tribuna", label: "Tribuna Pública" },
-  { href: "/materials", label: "Material e Ações" },
-  { href: "/texts", label: "Textos e Traduções" },
+  { href: "/tribuna-publica", label: "Tribuna Pública" },
+  { href: "/material-e-acoes", label: "Material e Ações" },
+  { href: "/textos-e-traducoes", label: "Textos e Traduções" },
 ]
 
 export default function Navbar() {

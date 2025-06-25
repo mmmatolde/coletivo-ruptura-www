@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title: text.fields.title,
       type: 'article',
-      url: `/texts/${text.sys.id}`,
+      url: `/textos-e-traducoes/${text.sys.id}`,
       images: [
         { url: imageUrl, width: 1200, height: 630, alt: text.fields.title },
       ],
@@ -89,7 +89,7 @@ export default async function TextPage({ params }: { params: { id: string } }) {
         {/* Título e partilha */}
         <h1 className="text-4xl font-bold mb-4">{text.fields.title}</h1>
         <ShareButton
-          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/texts/${text.sys.id}`}
+          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/textos-e-traducoes/${text.sys.id}`}
           title={text.fields.title}
           type="texto"
         />

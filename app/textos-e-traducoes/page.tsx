@@ -146,7 +146,7 @@ export default async function TextsPage({
             {filteredTexts.map((text) => (
               <Link
                 key={text.id}
-                href={`/texts/${text.id}`}
+                href={`/textos-e-traducoes/${text.id}`}
                 className="block transition-colors hover:text-red-600"
               >
                 <Card className="group overflow-hidden transition-all hover:shadow-md h-[180px]">
@@ -194,7 +194,7 @@ export default async function TextsPage({
             <PaginationWithEllipsis
               currentPage={page}
               totalPages={totalPages}
-              baseUrl="/texts"
+              baseUrl="/textos-e-traducoes"
               searchParams={{
                 ...(search && { search }),
                 ...(filter !== 'all' && { filter })

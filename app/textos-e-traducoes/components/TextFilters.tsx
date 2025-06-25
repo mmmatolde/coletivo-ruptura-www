@@ -14,14 +14,18 @@ export function TextFilters() {
     const params = new URLSearchParams(searchParams.toString())
     params.set('search', value)
     params.set('page', '1')
-    router.push(`/texts?${params.toString()}`)
+    router.push(`/textos-e-traducoes?${params.toString()}`)
   }
 
   const handleFilter = (value: 'all' | 'textos' | 'translation') => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('filter', value)
     params.set('page', '1')
-    router.push(`/texts?${params.toString()}`)
+    router.push(`/textos-e-traducoes?${params.toString()}`)
+  }
+
+  const handleClearFilters = () => {
+    router.push('/textos-e-traducoes')
   }
 
   return (

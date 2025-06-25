@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title: tribune.fields.title,
       type: 'article',
-      url: `/tribuna/${tribune.sys.id}`,
+      url: `/tribuna-publica/${tribune.sys.id}`,
       images: [
         { url: imageUrl, width: 1200, height: 630, alt: tribune.fields.title },
       ],
@@ -94,7 +94,7 @@ export default async function TribunaPage({ params }: { params: { id: string } }
 
         <h1 className="text-4xl font-bold mb-4">{tribune.fields.title}</h1>
         <ShareButton
-          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/tribuna/${tribune.sys.id}`}
+          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/tribuna-publica/${tribune.sys.id}`}
           title={tribune.fields.title}
           type="tribuna"
         />
