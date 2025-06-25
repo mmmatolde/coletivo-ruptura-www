@@ -129,15 +129,16 @@ export default function ArtigosPage() {
         ) : (
           <>
             {/* Grid de Artigos */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-x-8 md:gap-y-8 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-10">
               {paginatedArticles.map((article) => (
                 <Link
                   key={article.sys.id}
                   href={`/artigos/${article.sys.id}/${slugify(article.fields.title)}`}
                   className="group"
+                  aria-label={`Ver artigo: ${article.fields.title}`}
                 >
-                  <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[350px] flex flex-col">
-                    <div className="relative h-48 w-full flex-shrink-0">
+                  <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[260px] xs:h-[300px] md:h-[350px] flex flex-col">
+                    <div className="relative h-32 xs:h-40 md:h-48 w-full flex-shrink-0">
                       <Image
                         src={`https:${article.fields.capa.fields.file.url}`}
                         alt={article.fields.title}
@@ -145,11 +146,11 @@ export default function ArtigosPage() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="p-4 flex flex-col flex-grow">
-                      <h2 className="text-xl font-semibold mb-2 group-hover:text-red-600 line-clamp-2">
+                    <div className="p-3 xs:p-4 flex flex-col flex-grow">
+                      <h2 className="text-lg xs:text-xl font-semibold mb-2 group-hover:text-red-600 line-clamp-2">
                         {article.fields.title}
                       </h2>
-                      <div className="flex flex-col gap-1 text-gray-600 dark:text-gray-300 mt-auto">
+                      <div className="flex flex-col gap-1 text-gray-600 dark:text-gray-300 mt-auto text-xs xs:text-sm">
                         <p>Por {article.fields.autoria}</p>
                         <p>{new Date(article.fields.date || article.sys.createdAt).toLocaleDateString('pt-PT', {
                           day: 'numeric',

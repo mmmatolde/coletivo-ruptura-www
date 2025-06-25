@@ -5,14 +5,14 @@ import { SiX, SiFacebook, SiInstagram } from "react-icons/si"
 export default function Footer() {
   return (
     <footer className="bg-gray-100 pt-12 pb-6">
-      <div className="container">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4 lg:grid-cols-5">
-          <div className="md:col-span-2">
+      <div className="container px-4 sm:px-6 md:px-8">
+        <div className="grid grid-cols-1 gap-8 gap-y-8 md:grid-cols-4 lg:grid-cols-5">
+          <div className="md:col-span-3">
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/images/logo.png" alt="Logo Coletivo Ruptura" width={40} height={40} />
               <span className="font-heading text-2xl font-bold text-black">COLETIVO RUPTURA</span>
             </Link>
-            <p className="mt-4 text-sm text-gray-600 text-justify mr-[10rem]">
+            <p className="mt-4 text-sm text-gray-600 text-justify mr-0 md:mr-0 lg:mr-[4rem] xl:mr-[10rem]">
               Grupo Comunista pela abolição da Família, da Propriedade Privada e a extinção do Estado; pela recuperação
               do Programa Comunista e a auto-emancipação do proletariado.
             </p>
