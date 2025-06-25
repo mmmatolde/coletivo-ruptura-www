@@ -101,7 +101,10 @@ export default function TextosClient({ allTexts }: { allTexts: Text[] }) {
                     </CardContent>
                     <CardFooter className="flex justify-between items-center text-xs text-gray-500">
                       <span>Por {text.autoria}</span>
-                      <span>{new Date(text.date).toLocaleDateString('pt-PT')}</span>
+                      <span>{new Date(text.date).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                      <span className="ml-2 rounded bg-zinc-900/60 px-2 py-1 text-xs font-medium text-white">
+                        {!text.originalOuTraducao ? 'Texto' : 'Tradução'}
+                      </span>
                     </CardFooter>
                   </Card>
                 </Link>

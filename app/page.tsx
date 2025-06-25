@@ -3,12 +3,27 @@ import Image from "next/image"
 import { ArrowRight, Calendar, FileText, MessageSquare, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { getArticles, getRecentPublications } from "@/lib/contentful"
+import { getArticles, getRecentPublications, getTexts } from "@/lib/contentful"
 
 export default async function HomePage() {
   // Buscar os 3 artigos mais recentes
   const { articles } = await getArticles(3, 0)
   const { articles: publications } = await getRecentPublications(3, 0)
+  const { texts } = await getTexts(3, 0)
+
+  // Unir artigos, tribunas e textos, ordenando por data
+  const allItems = [
+    ...publications,
+    ...texts.map((text: any) => ({
+      sys: text.sys,
+      fields: {
+        ...text.fields,
+        isText: true
+      }
+    }))
+  ]
+    .sort((a, b) => new Date(b.fields.date).getTime() - new Date(a.fields.date).getTime())
+    .slice(0, 3)
 
   return (
     <div className="flex flex-col">
@@ -104,22 +119,36 @@ export default async function HomePage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {publications.map((publication) => (
+            {allItems.map((publication) => (
               <Link
                 key={publication.sys.id}
-                href={publication.fields.isArticle ? `/artigos/${publication.sys.id}` : `/tribuna-publica/${publication.sys.id}`}
+                href={
+                  publication.fields.isArticle
+                    ? `/artigos/${publication.sys.id}`
+                    : publication.fields.isText
+                      ? `/textos-e-traducoes/${publication.sys.id}`
+                      : `/tribuna-publica/${publication.sys.id}`
+                }
                 className="block h-full"
               >
                 <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col">
                   <div className="relative h-48 overflow-hidden">
                     <Image
-                      src={`https:${publication.fields.capa.fields.file.url}`}
+                      src={
+                        publication.fields.isText
+                          ? publication.fields.capa.url || `https:${publication.fields.capa.fields.file.url}`
+                          : `https:${publication.fields.capa.fields.file.url}`
+                      }
                       alt={publication.fields.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <span className="absolute top-2 right-2 rounded-md bg-zinc-900/60 px-2 py-1 text-xs font-medium text-white z-10">
-                      {publication.fields.isArticle ? 'Artigo' : 'Tribuna Pública'}
+                      {publication.fields.isArticle
+                        ? 'Artigo'
+                        : publication.fields.isText
+                          ? 'Texto/Tradução'
+                          : 'Tribuna Pública'}
                     </span>
                   </div>
                   <CardContent className="flex-grow p-4">
