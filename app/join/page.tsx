@@ -96,24 +96,11 @@ export default function JoinPage() {
 
               <div className="mt-8 relative h-64 overflow-hidden rounded-lg md:h-80">
                 <Image
-                  src="/placeholder.svg?height=600&width=800"
+                  src="/placeholder.svg?height=600"
                   alt="Membros do coletivo"
                   fill
                   className="object-cover"
                 />
-              </div>
-
-              <div className="mt-8 rounded-lg bg-red-50 p-6">
-                <h3 className="font-heading text-xl font-bold text-gray-900">Já és membro?</h3>
-                <p className="mt-2 text-gray-600">
-                  Se já és membro do Coletivo Ruptura, podes aceder à área de membros para participar nas atividades e
-                  recursos exclusivos.
-                </p>
-                <div className="mt-4">
-                  <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-100">
-                    <Link href="/members">Área de Membros</Link>
-                  </Button>
-                </div>
               </div>
             </div>
 
@@ -256,4 +243,4 @@ export default function JoinPage() {
       </section>
     </div>
   )
-}
+} 

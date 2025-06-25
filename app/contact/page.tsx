@@ -86,7 +86,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-sm text-gray-600">info@coletivoruptura.org</p>
+                      <p className="text-sm text-gray-600">coletivoruptura1917@gmail.com</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -94,70 +94,53 @@ export default function ContactPage() {
                 <Card>
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-                      <Phone className="h-6 w-6" />
+                      <SiFacebook className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Telefone</h3>
-                      <p className="text-sm text-gray-600">+351 912 345 678</p>
+                      <h3 className="font-medium">Facebook</h3>
+                      <a href="https://www.facebook.com/rupturacoletivo/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-red-600">facebook.com/rupturacoletivo</a>
                     </div>
                   </CardContent>
                 </Card>
-              </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-heading text-xl">Horário de Atendimento</CardTitle>
-                  <CardDescription>O nosso horário de atendimento presencial:</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Segunda - Sexta:</span>
-                      <span>17:00 - 20:00</span>
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                      <SiX className="h-6 w-6" />
                     </div>
-                    <div className="flex justify-between">
-                      <span>Sábados:</span>
-                      <span>11:00 - 14:00</span>
+                    <div>
+                      <h3 className="font-medium">X (antigo Twitter)</h3>
+                      <a href="https://x.com/coletivoruptura" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-red-600">x.com/coletivoruptura</a>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Domingos:</span>
-                      <span>Encerrado</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-2">Redes Sociais</h3>
-                <div className="flex space-x-4">
-                  <Link
-                    href="https://www.facebook.com/rupturacoletivo/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-red-600"
-                  >
-                    <SiFacebook className="h-6 w-6" />
-                    <span className="sr-only">Facebook</span>
-                  </Link>
-                  <Link
-                    href="https://x.com/coletivoruptura"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-red-600"
-                  >
-                    <SiX className="h-6 w-6" />
-                    <span className="sr-only">X (antigo Twitter)</span>
-                  </Link>
-                  <Link
-                    href="https://www.instagram.com/coletivo_ruptura/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-red-600"
-                  >
-                    <SiInstagram className="h-6 w-6" />
-                    <span className="sr-only">Instagram</span>
-                  </Link>
-                </div>
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                      <SiInstagram className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Instagram</h3>
+                      <a href="https://www.instagram.com/coletivo_ruptura/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-red-600">instagram.com/coletivo_ruptura</a>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                      {/* Ícone do Telegram */}
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm4.93 7.36l-1.89 8.944c-.143.64-.52.797-1.053.497l-2.91-2.146-1.404 1.352c-.155.155-.285.285-.583.285l.21-2.98 5.423-4.9c.236-.21-.052-.327-.366-.117l-6.71 4.22-2.89-.902c-.627-.195-.64-.627.13-.927l11.29-4.36c.52-.195.973.127.81.92z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-medium">Telegram</h3>
+                      <a href="https://t.me/rupturacoletivo" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-red-600">@rupturacoletivo</a>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
@@ -191,7 +174,7 @@ export default function ContactPage() {
                           type="email"
                           value={formState.email}
                           onChange={handleChange}
-                          placeholder="teu@email.com"
+                          placeholder="coletivoruptura1917@gmail.com"
                           required
                         />
                       </div>

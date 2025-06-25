@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { SiX, SiFacebook, SiInstagram } from "react-icons/si"
+import { SiX, SiFacebook, SiInstagram, SiTelegram } from "react-icons/si"
 
 export default function Footer() {
   return (
@@ -28,6 +28,10 @@ export default function Footer() {
               <Link href="https://www.instagram.com/coletivo_ruptura/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
                 <SiInstagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
+              </Link>
+              <Link href="https://t.me/rupturacoletivo" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-red-600">
+                <SiTelegram className="h-5 w-5" />
+                <span className="sr-only">Telegram</span>
               </Link>
             </div>
           </div>
@@ -87,8 +91,7 @@ export default function Footer() {
                   Contacto
                 </Link>
               </li>
-              <li className="text-sm text-gray-600">info@coletivoruptura.org</li>
-              <li className="text-sm text-gray-600">+351 912 345 678</li>
+              <li className="text-sm text-gray-600">coletivoruptura1917@gmail.com</li>
             </ul>
           </div>
         </div>
