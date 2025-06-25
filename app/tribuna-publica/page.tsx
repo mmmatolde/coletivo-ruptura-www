@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PaginationWithEllipsis } from "@/components/ui/pagination"
+import { slugify } from '@/lib/utils'
 
 const CATEGORIAS = [
   'Internacional',
@@ -140,10 +141,10 @@ export default function TribunaPage() {
           ) : (
             <>
               <div className="grid gap-8 md:grid-cols-2">
-                {paginatedTribunes.map((tribune) => (
+                {paginatedTribunes.map((tribune: any) => (
                   <Link
                     key={tribune.sys.id}
-                    href={`/tribuna-publica/${tribune.sys.id}`}
+                    href={`/tribuna-publica/${tribune.sys.id}/${slugify(tribune.fields.title)}`}
                     className="block transition-colors hover:text-red-600"
                   >
                     <Card className="group h-full overflow-hidden transition-all hover:shadow-md">

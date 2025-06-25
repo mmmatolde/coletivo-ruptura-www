@@ -1,42 +1,34 @@
-import { getTribuneById } from '@/lib/contentful'
+import { getTextById } from '@/lib/contentful'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { Calendar, User } from 'lucide-react'
 import { ShareButton } from '@/components/ShareButton'
 import type { Metadata } from 'next'
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer'
 import type { Document as ContentfulDocument } from '@contentful/rich-text-types'
 import { slugify } from '@/lib/utils'
 
-const CATEGORIAS = [
-  'Internacional',
-  'Movimento Estudantil',
-  'LGBTQIA+',
-  'Feminismo'
-] as const
-
 export const revalidate = 3600
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const tribune = await getTribuneById(params.id)
-  if (!tribune) {
-    return { title: 'Tribuna não encontrada' }
+export async function generateMetadata({ params }: { params: { id: string; slug: string } }): Promise<Metadata> {
+  const text = await getTextById(params.id)
+  if (!text) {
+    return { title: 'Texto não encontrado' }
   }
-  const imageUrl = `https:${tribune.fields.capa.fields.file.url}`
-  const slug = slugify(tribune.fields.title)
+  const imageUrl = `https:${text.fields.capa.fields.file.url}`
+  const slug = slugify(text.fields.title)
   return {
-    title: tribune.fields.title,
+    title: text.fields.title,
     openGraph: {
-      title: tribune.fields.title,
+      title: text.fields.title,
       type: 'article',
-      url: `/tribuna-publica/${tribune.sys.id}/${slug}`,
+      url: `/textos-e-traducoes/${text.sys.id}/${slug}`,
       images: [
-        { url: imageUrl, width: 1200, height: 630, alt: tribune.fields.title },
+        { url: imageUrl, width: 1200, height: 630, alt: text.fields.title },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: tribune.fields.title,
+      title: text.fields.title,
       images: [imageUrl],
     },
   }
@@ -77,34 +69,34 @@ const options: Options = {
   },
 }
 
-export default async function TribunaPage({ params }: { params: { id: string } }) {
-  const tribune = await getTribuneById(params.id)
-  if (!tribune) notFound()
-  const slug = slugify(tribune.fields.title)
+export default async function TextPage({ params }: { params: { id: string; slug: string } }) {
+  const text = await getTextById(params.id)
+  if (!text) notFound()
+  const slug = slugify(text.fields.title)
 
   return (
     <main className="container mx-auto px-4 py-8">
       <article className="max-w-4xl mx-auto">
         <div className="relative h-[400px] w-full mb-8 rounded-lg overflow-hidden">
           <Image
-            src={`https:${tribune.fields.capa.fields.file.url}`}
-            alt={tribune.fields.title}
+            src={`https:${text.fields.capa.fields.file.url}`}
+            alt={text.fields.title}
             fill
             className="object-cover"
             priority
           />
         </div>
 
-        <h1 className="text-4xl font-bold mb-4">{tribune.fields.title}</h1>
+        <h1 className="text-4xl font-bold mb-4">{text.fields.title}</h1>
         <ShareButton
-          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/tribuna-publica/${tribune.sys.id}/${slug}`}
-          title={tribune.fields.title}
-          type="tribuna"
+          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/textos-e-traducoes/${text.sys.id}/${slug}`}
+          title={text.fields.title}
+          type="texto"
         />
 
         <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-300 mb-8">
-          <p>Por {tribune.fields.autoria}</p>
-          <p>{new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
+          <p>Por {text.fields.autoria}</p>
+          <p>{new Date(text.fields.date || text.sys.createdAt).toLocaleDateString('pt-PT', {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
@@ -112,7 +104,7 @@ export default async function TribunaPage({ params }: { params: { id: string } }
         </div>
 
         <div className="prose dark:prose-invert max-w-none">
-          {documentToReactComponents(tribune.fields.texto as ContentfulDocument, options)}
+          {documentToReactComponents(text.fields.texto as ContentfulDocument, options)}
         </div>
       </article>
     </main>

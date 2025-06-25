@@ -17,7 +17,7 @@ const CATEGORIAS = [
 
 export const revalidate = 3600
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { id: string; slug: string } }): Promise<Metadata> {
   const tribune = await getTribuneById(params.id)
   if (!tribune) {
     return { title: 'Tribuna não encontrada' }
@@ -77,7 +77,7 @@ const options: Options = {
   },
 }
 
-export default async function TribunaPage({ params }: { params: { id: string } }) {
+export default async function TribunaPage({ params }: { params: { id: string; slug: string } }) {
   const tribune = await getTribuneById(params.id)
   if (!tribune) notFound()
   const slug = slugify(tribune.fields.title)

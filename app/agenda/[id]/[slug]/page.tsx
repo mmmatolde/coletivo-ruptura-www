@@ -1,42 +1,35 @@
-import { getTribuneById } from '@/lib/contentful'
+import { getEventById } from '@/lib/contentful'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { Calendar, User } from 'lucide-react'
 import { ShareButton } from '@/components/ShareButton'
 import type { Metadata } from 'next'
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer'
 import type { Document as ContentfulDocument } from '@contentful/rich-text-types'
 import { slugify } from '@/lib/utils'
 
-const CATEGORIAS = [
-  'Internacional',
-  'Movimento Estudantil',
-  'LGBTQIA+',
-  'Feminismo'
-] as const
-
 export const revalidate = 3600
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const tribune = await getTribuneById(params.id)
-  if (!tribune) {
-    return { title: 'Tribuna não encontrada' }
+// Função para gerar metadados dinâmicos para partilha
+export async function generateMetadata({ params }: { params: { id: string; slug: string } }): Promise<Metadata> {
+  const event = await getEventById(params.id)
+  if (!event) {
+    return { title: 'Evento não encontrado' }
   }
-  const imageUrl = `https:${tribune.fields.capa.fields.file.url}`
-  const slug = slugify(tribune.fields.title)
+  const imageUrl = event.fields.capa ? `https:${event.fields.capa.fields.file.url}` : '/images/logo.png'
+  const slug = slugify(event.fields.title)
   return {
-    title: tribune.fields.title,
+    title: event.fields.title,
     openGraph: {
-      title: tribune.fields.title,
+      title: event.fields.title,
       type: 'article',
-      url: `/tribuna-publica/${tribune.sys.id}/${slug}`,
+      url: `/agenda/${event.sys.id}/${slug}`,
       images: [
-        { url: imageUrl, width: 1200, height: 630, alt: tribune.fields.title },
+        { url: imageUrl, width: 1200, height: 630, alt: event.fields.title },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: tribune.fields.title,
+      title: event.fields.title,
       images: [imageUrl],
     },
   }
@@ -77,42 +70,38 @@ const options: Options = {
   },
 }
 
-export default async function TribunaPage({ params }: { params: { id: string } }) {
-  const tribune = await getTribuneById(params.id)
-  if (!tribune) notFound()
-  const slug = slugify(tribune.fields.title)
+export default async function EventDetailsPage({ params }: { params: { id: string; slug: string } }) {
+  const event = await getEventById(params.id)
+  if (!event) notFound()
+  const slug = slugify(event.fields.title)
 
   return (
     <main className="container mx-auto px-4 py-8">
       <article className="max-w-4xl mx-auto">
         <div className="relative h-[400px] w-full mb-8 rounded-lg overflow-hidden">
           <Image
-            src={`https:${tribune.fields.capa.fields.file.url}`}
-            alt={tribune.fields.title}
+            src={`https:${event.fields.capa.fields.file.url}`}
+            alt={event.fields.title}
             fill
             className="object-cover"
             priority
           />
         </div>
 
-        <h1 className="text-4xl font-bold mb-4">{tribune.fields.title}</h1>
+        <h1 className="text-4xl font-bold mb-4">{event.fields.title}</h1>
         <ShareButton
-          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/tribuna-publica/${tribune.sys.id}/${slug}`}
-          title={tribune.fields.title}
-          type="tribuna"
+          url={`${typeof window !== 'undefined' ? window.location.origin : ''}/agenda/${event.sys.id}/${slug}`}
+          title={event.fields.title}
+          type="evento"
         />
 
         <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-300 mb-8">
-          <p>Por {tribune.fields.autoria}</p>
-          <p>{new Date(tribune.fields.date || tribune.sys.createdAt).toLocaleDateString('pt-PT', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}</p>
+          <p>{new Date(event.fields.dataEHora).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })} às {new Date(event.fields.dataEHora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+          <p>{event.fields.morada || 'Localização não disponível'}</p>
         </div>
 
         <div className="prose dark:prose-invert max-w-none">
-          {documentToReactComponents(tribune.fields.texto as ContentfulDocument, options)}
+          {documentToReactComponents(event.fields.descricao as ContentfulDocument, options)}
         </div>
       </article>
     </main>

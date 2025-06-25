@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { PaginationWithEllipsis } from "@/components/ui/pagination"
+import { slugify } from '@/lib/utils'
 
 const CATEGORIAS = [
   'Internacional',
@@ -131,8 +132,8 @@ export default function ArtigosPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {paginatedArticles.map((article) => (
                 <Link
-                  href={`/artigos/${article.sys.id}`}
                   key={article.sys.id}
+                  href={`/artigos/${article.sys.id}/${slugify(article.fields.title)}`}
                   className="group"
                 >
                   <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[350px] flex flex-col">

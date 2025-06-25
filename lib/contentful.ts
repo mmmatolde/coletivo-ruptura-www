@@ -55,6 +55,28 @@ export interface EventFields {
   }
 }
 
+export interface TextFields {
+  fields: {
+    title: string
+    capa: {
+      fields: {
+        file: {
+          url: string
+        }
+      }
+    }
+    texto: Document
+    autoria: string
+    date: string
+    originalOuTraducao: boolean
+  }
+  sys: {
+    id: string
+    createdAt: string
+    updatedAt: string
+  }
+}
+
 // Configuração do cliente Contentful
 export const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID!,
@@ -368,17 +390,22 @@ export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryR
 }
 
 export async function getTexts(limit: number = 10, skip: number = 0) {
-  const response = await client.getEntries({
-    content_type: 'textosETraducoes',
-    limit,
-    skip,
-    order: ['-sys.createdAt']
-  });
+  try {
+    const response = await client.getEntries({
+      content_type: 'textosETraducoes',
+      limit,
+      skip,
+      order: ['-sys.createdAt'],
+    });
 
-  return {
-    texts: response.items,
-    total: response.total
-  };
+    const texts = response.items;
+    const total = response.total;
+
+    return { texts, total };
+  } catch (error) {
+    console.error('Error fetching texts:', error);
+    return { texts: [], total: 0 };
+  }
 }
 
 // Função para buscar todos os eventos
@@ -438,5 +465,21 @@ export async function getTribuneCategories(): Promise<string[]> {
   } catch (error) {
     console.error('Erro ao buscar categorias das tribunas:', error)
     return []
+  }
+}
+
+// Função para buscar um texto específico pelo ID
+export async function getTextById(id: string): Promise<TextFields | null> {
+  try {
+    const text = await client.getEntry(id);
+    // Validação para garantir que a entrada é do tipo esperado, se necessário
+    if (text.sys.contentType.sys.id !== 'textosETraducoes') {
+      console.warn(`Entrada com ID ${id} não é do tipo 'textosETraducoes'.`);
+      return null;
+    }
+    return text as unknown as TextFields;
+  } catch (error) {
+    console.error(`Erro ao buscar texto com ID ${id}:`, error);
+    return null;
   }
 } 

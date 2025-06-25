@@ -16,6 +16,7 @@ import { getEvents } from "@/lib/contentful"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import type { Document } from "@contentful/rich-text-types"
 import { useState, useEffect } from "react"
+import { slugify } from '@/lib/utils'
 
 interface EventFields {
   title: string
@@ -126,7 +127,7 @@ export default function AgendaPage() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link 
-                    href={`/agenda/${eventOnDay.sys.id}`}
+                    href={`/agenda/${eventOnDay.sys.id}/${slugify(eventOnDay.fields.title)}`}
                     className="block w-full h-full hover:opacity-80 transition-opacity"
                   >
                     {day}
@@ -258,7 +259,7 @@ export default function AgendaPage() {
                               </div>
                               <div className="mt-4 flex flex-wrap gap-4">
                                 <Button asChild variant="outline" size="sm" className="text-red-600">
-                                  <Link href={`/agenda/${event.sys.id}`}>Ver detalhes</Link>
+                                  <Link href={`/agenda/${event.sys.id}/${slugify(event.fields.title)}`}>Ver detalhes</Link>
                                 </Button>
                                 <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
                                   <Link href={`/agenda/${event.sys.id}#register`}>Inscrever-se</Link>
@@ -321,7 +322,7 @@ export default function AgendaPage() {
                           </div>
                           <div className="mt-4">
                             <Button asChild variant="outline" size="sm">
-                              <Link href={`/agenda/${event.sys.id}`}>Ver detalhes</Link>
+                              <Link href={`/agenda/${event.sys.id}/${slugify(event.fields.title)}`}>Ver detalhes</Link>
                             </Button>
                           </div>
                         </div>
