@@ -45,12 +45,12 @@ export default async function HomePage() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
               <Link href="/join">
-                Junta-te ao Coletivo
+                Junta-te ao Ruptura
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
               <Link href="/about">
-                Conhece o Coletivo
+                Conhece o Ruptura
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
