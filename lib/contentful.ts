@@ -336,7 +336,7 @@ export async function getRecentPublications(limit = 3, skip = 0): Promise<QueryR
     })
 
     // Garantir pelo menos 1 de cada tipo
-    const selectedItems = []
+    const selectedItems: Entry<any>[] = []
     
     // Adicionar o artigo mais recente se existir
     const latestArticle = articlesResponse.items[0]
@@ -473,7 +473,18 @@ export async function getTextById(id: string): Promise<TextFields | null> {
   try {
     const text = await client.getEntry(id);
     // Validação para garantir que a entrada é do tipo esperado, se necessário
-    if (text.sys.contentType.sys.id !== 'textosETraducoes') {
+    if (
+      typeof text.sys === 'object' &&
+      text.sys !== null &&
+      'contentType' in text.sys &&
+      typeof (text.sys as any).contentType === 'object' &&
+      (text.sys as any).contentType !== null &&
+      'sys' in (text.sys as any).contentType &&
+      typeof (text.sys as any).contentType.sys === 'object' &&
+      (text.sys as any).contentType.sys !== null &&
+      'id' in (text.sys as any).contentType.sys &&
+      (text.sys as any).contentType.sys.id !== 'textosETraducoes'
+    ) {
       console.warn(`Entrada com ID ${id} não é do tipo 'textosETraducoes'.`);
       return null;
     }
@@ -481,5 +492,20 @@ export async function getTextById(id: string): Promise<TextFields | null> {
   } catch (error) {
     console.error(`Erro ao buscar texto com ID ${id}:`, error);
     return null;
+  }
+}
+
+// Função para buscar os materiais e ações do Contentful
+export async function getMateriaisEAcoes() {
+  try {
+    const response = await client.getEntries({
+      content_type: 'materiaisEAcoes',
+      order: ['-fields.date'],
+      include: 2 // para expandir assets (imagens, pdfs)
+    })
+    return response.items
+  } catch (error) {
+    console.error('Erro ao buscar materiais e ações:', error)
+    return []
   }
 } 

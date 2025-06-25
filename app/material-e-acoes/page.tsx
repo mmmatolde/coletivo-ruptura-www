@@ -1,118 +1,16 @@
-'use client'
-
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowDown, BookOpen, FileText, Printer, Share2 } from "lucide-react"
+import { ArrowDown, BookOpen, FileText, Printer, Share2, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useState } from "react"
 import { PaginationWithEllipsis } from "@/components/ui/pagination"
+import { getMateriaisEAcoes } from '@/lib/contentful'
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 
-export default function MaterialsPage() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
-
-  const materials = {
-    documents: [
-      {
-        id: 1,
-        title: "Manual de Organização Comunitária",
-        description: "Guia prático para a organização de assembleias e grupos de trabalho comunitários.",
-        type: "PDF",
-        size: "2.4 MB",
-        date: "10 Maio 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 2,
-        title: "Introdução ao Pensamento Crítico",
-        description: "Material formativo sobre as bases do pensamento crítico e a sua aplicação prática.",
-        type: "PDF",
-        size: "1.8 MB",
-        date: "2 Maio 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 3,
-        title: "Guia de Comunicação Popular",
-        description: "Ferramentas e conselhos para a comunicação eficaz em contextos de mobilização social.",
-        type: "PDF",
-        size: "3.1 MB",
-        date: "25 Abril 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-    ],
-    graphics: [
-      {
-        id: 1,
-        title: "Cartazes para Manifestações",
-        description: "Conjunto de designs de cartazes prontos para imprimir em formato A3.",
-        type: "ZIP",
-        size: "15 MB",
-        date: "8 Maio 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 2,
-        title: "Infografias sobre Crise Climática",
-        description: "Série de infografias explicativas sobre as causas e consequências da crise climática.",
-        type: "ZIP",
-        size: "8.5 MB",
-        date: "1 Maio 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 3,
-        title: "Modelos para Redes Sociais",
-        description: "Conjunto de modelos editáveis para publicações em redes sociais.",
-        type: "ZIP",
-        size: "12 MB",
-        date: "20 Abril 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-    ],
-    audiovisual: [
-      {
-        id: 1,
-        title: "Entrevistas a Ativistas",
-        description: "Série de entrevistas em áudio com ativistas de diferentes movimentos sociais.",
-        type: "MP3",
-        size: "45 MB",
-        date: "5 Maio 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 2,
-        title: "Documentário: Lutas Urbanas",
-        description: "Documentário sobre as lutas pelo direito à cidade e contra a gentrificação.",
-        type: "MP4",
-        size: "250 MB",
-        date: "15 Abril 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-      {
-        id: 3,
-        title: "Podcast: Debates Atuais",
-        description: "Série de podcasts com debates sobre temas da atualidade política e social.",
-        type: "MP3",
-        size: "60 MB",
-        date: "10 Abril 2024",
-        image: "/placeholder.svg?height=300&width=400",
-      },
-    ],
-  }
-
-  const allMaterials = [
-    ...materials.documents,
-    ...materials.graphics,
-    ...materials.audiovisual,
-  ]
-
-  const totalPages = Math.ceil(allMaterials.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentMaterials = allMaterials.slice(startIndex, endIndex)
+export default async function MaterialsPage() {
+  const materiais = await getMateriaisEAcoes()
 
   return (
     <div className="flex flex-col">
@@ -127,189 +25,32 @@ export default function MaterialsPage() {
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
       </section>
 
-      {/* Materials Tabs */}
+      {/* Materiais Dinâmicos */}
       <section className="py-16">
-        <div className="container">
-          <Tabs defaultValue="documents" className="mx-auto max-w-5xl">
-            <div className="mb-8 text-center">
-              <TabsList className="inline-flex">
-                <TabsTrigger value="documents" className="text-sm">
-                  Documentos
-                </TabsTrigger>
-                <TabsTrigger value="graphics" className="text-sm">
-                  Gráficos
-                </TabsTrigger>
-                <TabsTrigger value="audiovisual" className="text-sm">
-                  Audiovisual
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            {/* Documents Tab */}
-            <TabsContent value="documents">
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
-                    <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image 
-                        src={item.image || "/placeholder.svg"} 
-                        alt={item.title} 
-                        fill 
-                        className="object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/placeholder.svg";
-                        }}
-                      />
-                      <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
-                        {item.type}
-                      </div>
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="font-heading text-xl">{item.title}</CardTitle>
-                      <CardDescription>
-                        {item.date} • {item.size}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{item.description}</p>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button asChild variant="outline" size="sm" className="text-red-600">
-                        <Link href="#">
-                          <FileText className="mr-2 h-4 w-4" /> Ver
-                        </Link>
-                      </Button>
-                      <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                        <Link href="#">
-                          <ArrowDown className="mr-2 h-4 w-4" /> Descarregar
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <PaginationWithEllipsis
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  baseUrl="/materials"
-                />
-              )}
-            </TabsContent>
-
-            {/* Graphics Tab */}
-            <TabsContent value="graphics">
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
-                    <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image 
-                        src={item.image || "/placeholder.svg"} 
-                        alt={item.title} 
-                        fill 
-                        className="object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/placeholder.svg";
-                        }}
-                      />
-                      <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
-                        {item.type}
-                      </div>
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="font-heading text-xl">{item.title}</CardTitle>
-                      <CardDescription>
-                        {item.date} • {item.size}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{item.description}</p>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button asChild variant="outline" size="sm" className="text-red-600">
-                        <Link href="#">
-                          <Printer className="mr-2 h-4 w-4" /> Imprimir
-                        </Link>
-                      </Button>
-                      <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                        <Link href="#">
-                          <ArrowDown className="mr-2 h-4 w-4" /> Descarregar
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <PaginationWithEllipsis
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  baseUrl="/materials"
-                />
-              )}
-            </TabsContent>
-
-            {/* Audiovisual Tab */}
-            <TabsContent value="audiovisual">
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
-                    <div className="relative h-40 overflow-hidden bg-gray-100">
-                      <Image 
-                        src={item.image || "/placeholder.svg"} 
-                        alt={item.title} 
-                        fill 
-                        className="object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/placeholder.svg";
-                        }}
-                      />
-                      <div className="absolute right-2 top-2 rounded bg-white px-2 py-1 text-xs font-medium text-gray-600">
-                        {item.type}
-                      </div>
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="font-heading text-xl">{item.title}</CardTitle>
-                      <CardDescription>
-                        {item.date} • {item.size}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{item.description}</p>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                      <Button asChild variant="outline" size="sm" className="text-red-600">
-                        <Link href="#">
-                          <BookOpen className="mr-2 h-4 w-4" /> Reproduzir
-                        </Link>
-                      </Button>
-                      <Button asChild size="sm" className="bg-red-600 text-white hover:bg-red-700">
-                        <Link href="#">
-                          <ArrowDown className="mr-2 h-4 w-4" /> Descarregar
-                        </Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <PaginationWithEllipsis
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  baseUrl="/materials"
-                />
-              )}
-            </TabsContent>
-          </Tabs>
+        <div className="container grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {materiais.map((item: any) => {
+            const { title, capa } = item.fields
+            const imageUrl = capa?.fields?.file?.url
+            return (
+              <Link
+                key={item.sys.id}
+                href={`/material-e-acoes/${item.sys.id}`}
+                className="group bg-white rounded-lg shadow p-0 flex flex-col cursor-pointer transition-transform duration-200 hover:scale-105 hover:shadow-lg focus:outline-none"
+              >
+                {imageUrl && (
+                  <div className="relative h-48 w-full mb-0">
+                    <Image
+                      src={`https:${imageUrl}`}
+                      alt={title}
+                      fill
+                      className="object-cover rounded-t"
+                    />
+                  </div>
+                )}
+                <h2 className="font-heading text-xl font-bold p-4 group-hover:text-red-700 transition-colors duration-200">{title}</h2>
+              </Link>
+            )
+          })}
         </div>
       </section>
 

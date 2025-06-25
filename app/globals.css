@@ -75,3 +75,7 @@
     overflow-x: hidden;
   }
 }
+
+.prose p {
+  text-align: justify;
+}
