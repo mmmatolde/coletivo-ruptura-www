@@ -147,7 +147,7 @@ export default function TribunaPage() {
                     href={`/tribuna-publica/${tribune.sys.id}/${slugify(tribune.fields.title)}`}
                     className="block transition-colors hover:text-red-600"
                   >
-                    <Card className="group h-full overflow-hidden transition-all hover:shadow-md">
+                    <Card className="group h-full overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
                       <div className="flex flex-col md:flex-row h-full">
                         <div className="relative h-48 w-full md:h-[200px] md:w-1/3">
                           <Image

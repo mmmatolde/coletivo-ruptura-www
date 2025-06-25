@@ -79,9 +79,9 @@ export default function TextosClient({ allTexts }: { allTexts: Text[] }) {
                 <Link
                   key={text.id}
                   href={`/textos-e-traducoes/${text.id}/${slugify(text.title)}`}
-                  className="block hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="block group transition-transform"
                 >
-                  <Card className="h-full flex flex-col">
+                  <Card className="h-full flex flex-col transition-all duration-200 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-red-600">
                     <CardHeader>
                       <div className="relative h-40 w-full mb-4">
                         <Image

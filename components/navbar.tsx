@@ -72,7 +72,7 @@ export default function Navbar() {
                   <Link
                     key={route.href}
                     href={route.href}
-                    className="text-base font-medium transition-colors hover:text-red-600"
+                    className="text-base font-medium transition-colors rounded px-3 py-2 hover:bg-red-50 hover:text-red-600"
                     onClick={() => {
                       setIsMenuOpen(false)
                       window.scrollTo(0, 0)

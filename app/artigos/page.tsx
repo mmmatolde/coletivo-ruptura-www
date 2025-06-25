@@ -137,7 +137,7 @@ export default function ArtigosPage() {
                   className="group"
                   aria-label={`Ver artigo: ${article.fields.title}`}
                 >
-                  <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-transform group-hover:scale-105 h-[260px] xs:h-[300px] md:h-[350px] flex flex-col">
+                  <article className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden shadow-lg transition-all duration-200 group-hover:shadow-xl group-hover:-translate-y-1 group-hover:border-red-600 h-[260px] xs:h-[300px] md:h-[350px] flex flex-col">
                     <div className="relative h-32 xs:h-40 md:h-48 w-full flex-shrink-0">
                       <Image
                         src={`https:${article.fields.capa.fields.file.url}`}

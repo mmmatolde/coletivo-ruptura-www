@@ -149,7 +149,7 @@ export default function MaterialsPage() {
             <TabsContent value="documents">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden">
+                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
                       <Image 
                         src={item.image || "/placeholder.svg"} 
@@ -204,7 +204,7 @@ export default function MaterialsPage() {
             <TabsContent value="graphics">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden">
+                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
                       <Image 
                         src={item.image || "/placeholder.svg"} 
@@ -259,7 +259,7 @@ export default function MaterialsPage() {
             <TabsContent value="audiovisual">
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {currentMaterials.map((item) => (
-                  <Card key={item.id} className="overflow-hidden">
+                  <Card key={item.id} className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-red-600">
                     <div className="relative h-40 overflow-hidden bg-gray-100">
                       <Image 
                         src={item.image || "/placeholder.svg"} 
