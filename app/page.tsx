@@ -75,7 +75,7 @@ export default async function HomePage() {
               <h2 className="font-heading text-3xl font-bold text-gray-900">Junta-te à luta pela reconstrução do Partido Comunista!</h2>
               <div className="mt-8">
                 <Button asChild className="bg-red-600 text-white hover:bg-red-700">
-                  <Link href="/join">
+                  <Link href="/contact">
                     Quero juntar-me
                   </Link>
                 </Button>
@@ -150,11 +150,6 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-        <div className="mt-8 text-center">
-          <Button asChild className="bg-red-600 text-white hover:bg-red-700">
-            <Link href="/tribuna-publica">Ver Todas as Publicações</Link>
-          </Button>
-        </div>
       </section>
 
       {/* Donation Section */}
@@ -200,7 +195,7 @@ export default async function HomePage() {
               <h3 className="mt-4 font-heading text-xl font-bold">Tribuna Pública</h3>
               <p className="mt-2 text-gray-600">Participa em debates e discussões sobre temas da atualidade</p>
               <Link
-                href="/tribuna"
+                href="/tribuna-publica"
                 className="mt-4 text-sm font-medium text-red-600 hover:underline"
               >
                 Ir para a tribuna
