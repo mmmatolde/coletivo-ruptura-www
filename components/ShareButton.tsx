@@ -32,17 +32,38 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ url, title, type }) =>
   const encodedText = encodeURIComponent(shareText);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(url);
-    alert('Link copiado!');
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('Link copiado!');
+    } catch (error) {
+      console.error('Falha ao copiar o link:', error);
+      alert('Não foi possível copiar o link.');
+    }
+  };
+  
+  const handleInstagramShare = async () => {
+    // A API de Partilha Web é a melhor opção para partilha em mobile, incluindo para os Stories do Instagram
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareText,
+          url: url,
+        });
+      } catch (error) {
+        console.error('Erro ao partilhar:', error);
+      }
+    } else {
+      // Fallback para browsers de desktop
+      alert('A partilha direta para o Instagram não é suportada no computador. Por favor, copie o link e partilhe manualmente.');
+      handleCopy();
+    }
   };
 
   return (
     <div className="flex gap-2 items-center">
       {/* Instagram */}
-      <Button asChild size="icon" variant="ghost" title="Partilhar no Instagram (manual)">
-        <a href="https://instagram.com/coletivo_ruptura" target="_blank" rel="noopener noreferrer">
-          <SiInstagram className="w-4 h-4" />
-        </a>
+      <Button size="icon" variant="ghost" title="Partilhar no Instagram" onClick={handleInstagramShare} type="button">
+        <SiInstagram className="w-4 h-4" />
       </Button>
       {/* Twitter/X */}
       <Button asChild size="icon" variant="ghost" title="Partilhar no Twitter/X">
