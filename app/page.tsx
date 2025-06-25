@@ -49,12 +49,12 @@ export default async function HomePage() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/about">
+              <Link href="/sobre-nos">
                 Conhece o Ruptura
               </Link>
             </Button>
             <Button asChild variant="outline" className="border-red-600 text-red-600 hover:bg-red-50">
-              <Link href="/materials">
+              <Link href="/material-e-acoes">
                 Material e Ações
               </Link>
             </Button>
