@@ -16,7 +16,8 @@ import { getEvents } from "@/lib/contentful"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import type { Document } from "@contentful/rich-text-types"
 import { useState, useEffect } from "react"
-import { slugify } from '@/lib/utils'
+import { slugify, generateCalendarLinks } from '@/lib/utils'
+import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 interface EventFields {
   title: string
@@ -52,6 +53,7 @@ const options = {
 export default function AgendaPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [events, setEvents] = useState<Event[]>([])
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -59,6 +61,7 @@ export default function AgendaPage() {
       setEvents(loadedEvents)
     }
     loadEvents()
+    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
   }, [])
 
   const handlePreviousMonth = () => {
@@ -281,6 +284,28 @@ export default function AgendaPage() {
                                   {event.fields.morada || 'Localização não disponível'}
                                 </span>
                               </div>
+                              <Button asChild variant="default" size="default" className="text-white">
+                                <a
+                                  href={isIOS ? generateCalendarLinks({
+                                    title: event.fields.title,
+                                    start: new Date(event.fields.dataEHora),
+                                    end: new Date(new Date(event.fields.dataEHora).getTime() + 60 * 60 * 1000),
+                                    description: event.fields.descricao ? documentToPlainTextString(event.fields.descricao) : undefined,
+                                    location: event.fields.morada || undefined,
+                                  }).ics : generateCalendarLinks({
+                                    title: event.fields.title,
+                                    start: new Date(event.fields.dataEHora),
+                                    end: new Date(new Date(event.fields.dataEHora).getTime() + 60 * 60 * 1000),
+                                    description: event.fields.descricao ? documentToPlainTextString(event.fields.descricao) : undefined,
+                                    location: event.fields.morada || undefined,
+                                  }).google}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  {...isIOS && { download: `${slugify(event.fields.title)}.ics` }}
+                                >
+                                  Adicionar ao calendário
+                                </a>
+                              </Button>
                             </div>
                           </div>
                         </div>
@@ -341,6 +366,28 @@ export default function AgendaPage() {
                               {event.fields.morada || 'Localização não disponível'}
                             </span>
                           </div>
+                          <Button asChild variant="default" size="default" className="text-white">
+                            <a
+                              href={isIOS ? generateCalendarLinks({
+                                title: event.fields.title,
+                                start: new Date(event.fields.dataEHora),
+                                end: new Date(new Date(event.fields.dataEHora).getTime() + 60 * 60 * 1000),
+                                description: event.fields.descricao ? documentToPlainTextString(event.fields.descricao) : undefined,
+                                location: event.fields.morada || undefined,
+                              }).ics : generateCalendarLinks({
+                                title: event.fields.title,
+                                start: new Date(event.fields.dataEHora),
+                                end: new Date(new Date(event.fields.dataEHora).getTime() + 60 * 60 * 1000),
+                                description: event.fields.descricao ? documentToPlainTextString(event.fields.descricao) : undefined,
+                                location: event.fields.morada || undefined,
+                              }).google}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              {...isIOS && { download: `${slugify(event.fields.title)}.ics` }}
+                            >
+                              Adicionar ao calendário
+                            </a>
+                          </Button>
                         </div>
                       </div>
                     </div>
