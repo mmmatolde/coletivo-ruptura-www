@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { documentToReactComponents, type Options } from '@contentful/rich-text-react-renderer'
 import type { Document as ContentfulDocument } from '@contentful/rich-text-types'
 import { slugify } from '@/lib/utils'
+import { CommentForm } from '../../components/CommentForm'
 
 const CATEGORIAS = [
   'Internacional',
@@ -115,6 +116,7 @@ export default async function TribunaPage({ params }: { params: { id: string; sl
           {documentToReactComponents(tribune.fields.texto as ContentfulDocument, options)}
         </div>
       </article>
+      <CommentForm tribuneTitle={tribune.fields.title} />
     </main>
   )
 } 

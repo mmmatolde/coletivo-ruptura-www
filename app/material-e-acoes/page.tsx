@@ -18,8 +18,7 @@ export default async function MaterialsPage() {
       <section className="relative bg-gradient-to-r from-red-700 to-red-500 py-16 text-white md:py-24">
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Materiais de Ação</h1>
-            <p className="mt-6 text-xl font-medium">Recursos e ferramentas para a ação política e social</p>
+            <h1 className="font-heading text-4xl font-bold leading-tight md:text-5xl">Materiais e Ações</h1>
           </div>
         </div>
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1600')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>

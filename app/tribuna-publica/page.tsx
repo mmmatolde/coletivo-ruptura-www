@@ -178,9 +178,6 @@ export default function TribunaPage() {
                               <div className="flex items-center gap-1">
                                 <User className="h-4 w-4" /> {tribune.fields.autoria}
                               </div>
-                              <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
-                                <MessageSquare className="h-4 w-4" /> 0
-                              </div>
                             </div>
                           </CardFooter>
                         </div>
