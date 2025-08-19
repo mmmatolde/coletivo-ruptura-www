@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowDown, BookOpen, FileText, Printer, Share2, Download } from "lucide-react"
+import { ArrowDown, BookOpen, FileText, Printer, Share2, Download, User, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -29,7 +29,7 @@ export default async function MaterialsPage() {
       <section className="py-16">
         <div className="container grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {materiais.map((item: any) => {
-            const { title, capa } = item.fields
+            const { title, capa, autoria, date } = item.fields
             const imageUrl = capa?.fields?.file?.url
             return (
               <Link
@@ -48,6 +48,21 @@ export default async function MaterialsPage() {
                   </div>
                 )}
                 <h2 className="font-heading text-xl font-bold p-4 group-hover:text-red-700 transition-colors duration-200">{title}</h2>
+                <CardFooter className="p-4 pt-0 mt-auto">
+                  <div className="flex items-center justify-between w-full text-sm text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <User className="h-4 w-4" /> {autoria}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      {date && new Date(date).toLocaleDateString('pt-PT', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                </CardFooter>
               </Link>
             )
           })}
