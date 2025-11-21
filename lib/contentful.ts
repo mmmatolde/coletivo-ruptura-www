@@ -19,6 +19,7 @@ export interface BlogFields {
     date: string
     description?: string
     excerpt?: string
+    categoria?: string[]
   }
   sys: {
     id: string

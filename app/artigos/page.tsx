@@ -1,6 +1,6 @@
 'use client'
 
-import { getArticles } from '@/lib/contentful'
+import { getArticles, BlogFields } from '@/lib/contentful'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Input } from "@/components/ui/input"
@@ -23,7 +23,7 @@ export default function ArtigosPage() {
   const page = Number(searchParams.get('page')) || 1
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all')
-  const [allArticles, setAllArticles] = useState([])
+  const [allArticles, setAllArticles] = useState<BlogFields[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const limit = 6
 
@@ -125,7 +125,7 @@ export default function ArtigosPage() {
 
       <main className="container mx-auto px-4 py-8">
         {isLoading ? (
-          <div className="text-center py-8">Carregando artigos...</div>
+          <div className="text-center py-8">A carregar Artigos</div>
         ) : (
           <>
             {/* Grid de Artigos */}

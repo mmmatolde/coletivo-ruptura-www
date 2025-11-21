@@ -1,6 +1,6 @@
 'use client'
 
-import { getTribunes } from '@/lib/contentful'
+import { getTribunes, BlogFields } from '@/lib/contentful'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Calendar, MessageSquare, User, Tag } from "lucide-react"
@@ -26,7 +26,7 @@ export default function TribunaPage() {
   const page = Number(searchParams.get('page')) || 1
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all')
-  const [allTribunes, setAllTribunes] = useState([])
+  const [allTribunes, setAllTribunes] = useState<BlogFields[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const limit = 6
 
@@ -137,7 +137,7 @@ export default function TribunaPage() {
       <section className="py-16">
         <div className="container">
           {isLoading ? (
-            <div className="text-center py-8">Carregando artigos...</div>
+            <div className="text-center py-8">A carregar Tribuna Pública</div>
           ) : (
             <>
               <div className="grid gap-8 md:grid-cols-2">
@@ -178,6 +178,9 @@ export default function TribunaPage() {
                               <div className="flex items-center gap-1">
                                 <User className="h-4 w-4" /> {tribune.fields.autoria}
                               </div>
+                              <div className="flex items-center gap-1 text-gray-500 group-hover:text-red-600 transition-colors">
+                                <MessageSquare className="h-4 w-4" /> 0
+                              </div>
                             </div>
                           </CardFooter>
                         </div>
@@ -192,7 +195,6 @@ export default function TribunaPage() {
                 <PaginationWithEllipsis
                   currentPage={page}
                   totalPages={totalPages}
-                  onPageChange={handlePageChange}
                   baseUrl="/tribuna-publica"
                   searchParams={{
                     ...(searchTerm && { search: searchTerm }),
